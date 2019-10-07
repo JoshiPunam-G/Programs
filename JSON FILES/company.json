@@ -1,0 +1,6 @@
+[
+{"comp_symbol":"tata" , "available_shares":2 , "price_per_shares":10},
+{"comp_symbol":"cisco" , "available_shares":4 , "price_per_shares":40},
+{"comp_symbol":"tcs" , "available_shares":5 , "price_per_shares":30},
+{"comp_symbol":"mahindra" , "available_shares":4 , "price_per_shares":20}
+]

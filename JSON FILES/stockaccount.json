@@ -1,0 +1,45 @@
+{
+  "customer":[
+  { 
+   "cust_id":10 ,
+   "cust_name":"john" ,
+   "shares":2 ,
+   "balance":300 
+  },
+  {  
+   "cust_id":20 ,
+   "cust_name":"smith" ,
+   "shares":3 ,
+   "balance":400
+  }  
+ ],
+  "company":[
+  {
+   "comp_symbol":"tata" , 
+   "available_shares":20 , 
+   "price_per_shares":10
+  },
+  {
+   "comp_symbol":"star" , 
+   "available_shares":50 , 
+   "price_per_shares":15
+  }
+  ],
+  "transaction": [
+  {
+  "buy":10 ,
+  "sell":15 , 
+  "symbol":"shine" , 
+  "cust_name":"john" ,
+  "date":"ddmmyyyy"
+  },
+  {
+  "buy":5 ,
+  "sell":20 , 
+  "amount":600 , 
+  "symbol":"start" , 
+  "cust_name":"smith" ,
+  "date":"ddmmyyyy"
+  }
+  ]
+}

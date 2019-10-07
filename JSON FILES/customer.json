@@ -1,0 +1,6 @@
+[
+{ "cust_id":10 , "cust_name":"john" , "shares":2 },
+{ "cust_id":11 , "cust_name":"smith" , "shares":6 },
+{ "cust_id":12 , "cust_name":"jack" , "shares":1 },
+{ "cust_id":13 , "cust_name":"sam" , "shares":5 }
+]

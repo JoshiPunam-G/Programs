@@ -1,0 +1,25 @@
+{
+ "rice" :[
+   { "name":"Basmati","weight":1,"price":40 },
+   { "name":"Kolam","weight":2,"price":50 },
+   { "name":"MotherIndia","weight":3,"price":60 }
+  ],
+  "wheat": [
+   {"name":"sonpari","weight":1,"price":120},
+   {"name":"wheat2","weight":3,"price":130},
+   {"name":"wheat4","weight":4,"price":160}
+  ],
+"pulse"  :[
+   {"name":"Mung" ,"weight":2 ,"price":80},
+   {"name":"toor"   ,"weight":3 ,"price":100},
+   {"name":"masoor" ,"weight":1 ,"price":70}
+  ]
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+[
+{"buy":10 , "sell":15 , "amount":300 , "symbol":"start" , "cust_name":"smith" ,"date":"ddmmyyyy"},
+{"buy":40 , "sell":60 , "amount":200 , "symbol":"tata" , "cust_name":"john" ,"date":"ddmmyyyy"},
+{"buy":50 , "sell":80 , "amount":100 , "symbol":"sunrise" , "cust_name":"jack" ,"date":"ddmmyyyy"},
+{"buy":15 , "sell":90 , "amount":600 , "symbol":"sunmicro" , "cust_name":"sam" ,"date":"ddmmyyyy"}
+]
