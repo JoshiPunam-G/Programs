@@ -1,11 +1,7 @@
 package com.bridgelabz.commercialdataprocessing;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -13,10 +9,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import Utility.Utility;
-
 import com.bridgelabz.commercial.model.Company;
-import com.bridgelabz.commercial.model.Customer;
 import com.bridgelabz.commercial.model.StockModel;
 
 public class StockMethod {
@@ -28,15 +21,14 @@ static StockModel list;
  * @throws JsonMappingException
  * @throws IOException
  */
-	public static StockModel read() throws JsonParseException, JsonMappingException, IOException
-	{
+	public  StockModel read() throws Exception{
 
 		ObjectMapper mapper=new ObjectMapper();
 		File file = new File("/home/bridgeit/Desktop/account.json" );
 		StockModel list = mapper.readValue(file, StockModel.class);
 	    System.out.println(list); 
-	    list.getCustomer(); 
-	    list.getCompany();
+//	    list.getCustomer(); 
+//	    list.getCompany();
 		return list;
 		
 	}
@@ -47,98 +39,66 @@ static StockModel list;
  * Purpose: Method For Buying shares from comapny 
  * @param company
  * @param customer
- * @throws IOException 
+ * @throws Exception 
  * @throws  
  * @throws JsonMappingException 
  */
-	public static void buy(long cust_amount,String symbol) throws IOException  {
-	      StockAccount stock=new StockAccount();
-	      StockModel list;
+	public void  buy(long user_share,String symbol) throws Exception
+	{
 	      list=read();
-          //int flag=0;
-	     // long company_available_amount;
-	    
-        for(int i=0;i<2;i++)
-       {
-           if(symbol.equals(list.getCompany().get(i).getComp_symbol()))
-           {
-        	/* calculating price of company shares */
-        	long Company_Amount=list.getCompany().get(i).getAvailable_shares()*list.getCompany().get(i).getPrice_per_shares();
-           	System.out.println("Company Initial Balance :"+Company_Amount);
-           
-           	/*customer buying shares from company*/
-           	long company_available_amount=Company_Amount+cust_amount;
-           	System.out.println("Add stock to account :"+company_available_amount);
-           	
-        	System.out.println("----");
-        	
-        	/*calcute initial balance of customer*/
-      	    long initial_balance=list.getCustomer().get(i).getBalance();
-       	    System.out.println("Initial Balance of Customer "+initial_balance);
-       	    
-       	    /*calculate available balance of */
-       	    long  cust_availablebalance=list.getCustomer().get(i).getBalance()-cust_amount;
-            System.out.println("Available Balance Of Customer After Buying Shares from Company :"+ cust_availablebalance);  
+          for(int i=0;i<2;i++)
+          {
+        	  if(symbol.equals(list.getCompany().get(i).getComp_symbol()))
+        	  { 
+        		  long numberOfShare=list.getCompany().get(i).getAvailable_shares()+user_share;
+        		  System.out.println("UPDATED" +list);
+        		  System.out.println("Buying shares  "+numberOfShare);
+        		  list.getCompany().get(i).setAvailable_shares(numberOfShare);
+        		  
+        		  System.out.println("--Updated Company Shares Price--");
+        		  long Total_compShare_Price=list.getCompany().get(i).getAvailable_shares()*list.getCompany().get(i).getPrice_per_shares();
+        		  System.out.println("Total Share Price of Company :"+Total_compShare_Price);
+        		  list.getCompany().get(i).setPrice_per_shares(Total_compShare_Price);
+        		  
+        		  
+        	  }
+          }
+	      save();
+	      
+      	}
      
-           	}
-           }     
-//            String choice1="yes";
-//            System.out.println("Do You Want to Save this Transaction");
-//            String choice=Utility.isString();
-//            if(choice==choice1)
-//            {
-//            	StockMethod.save(choice, choice1);
-//            }
-//            
-//        
-         }
-           
           
       	
 	/**
 	 * Purpose :Method for selling shares to customer 
 	 * @param company
 	 * @param customer
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws Exception 
 	 */
-	public static void sell(long cust_amount,String symbol) throws JsonParseException, JsonMappingException, IOException {
-		 StockModel list;
+	public  void sell(long user_share,String symbol) throws Exception {
+		 
 	      list=read();
-		for(int i=0;i<2;i++)
-		{
+	      
+	      
+	      for(int i=0;i<2;i++)
+          {
+        	  if(symbol.equals(list.getCompany().get(i).getComp_symbol()))
+        	  {
+        		  long numberOfShare=list.getCompany().get(i).getAvailable_shares()-user_share;
+        		  System.out.println("Buying shares  "+numberOfShare);
+        		  list.getCompany().get(i).setAvailable_shares(numberOfShare);
+        		  
+        		  System.out.println("--Updated Comapny Shares Price --");
+        		  long Total_compShare_Price=list.getCompany().get(i).getAvailable_shares()*list.getCompany().get(i).getPrice_per_shares();
+        		  System.out.println("Total Share Price of Company :"+Total_compShare_Price);
+        		  list.getCompany().get(i).setPrice_per_shares(Total_compShare_Price);
+        		  
+        	  }
+          }
+	      save();
+	      
 
-	           if(symbol.equals(list.getCompany().get(i).getComp_symbol()))
-	           {
-	        	/* calculating price of company shares */
-	        	long Company_Amount=list.getCompany().get(i).getAvailable_shares()*list.getCompany().get(i).getPrice_per_shares();
-	           	System.out.println("Company Initial Balance :"+Company_Amount);
-	           
-	           	/*customer buying shares from company*/
-	           	long company_available_amount=Company_Amount-cust_amount;
-	           	System.out.println("Substract stock from Account :"+company_available_amount);
-	           	
-	        	System.out.println("----");
-	        	
-	        	/*calcute initial balance of customer*/
-	      	    long initial_balance=list.getCustomer().get(i).getBalance();
-	       	    System.out.println("Initial Balance of Customer "+initial_balance);
-	       	    
-	       	    /*calculate available balance of */
-	       	    long  cust_availablebalance=list.getCustomer().get(i).getBalance()+cust_amount;
-	            System.out.println("Available Balance Of Customer After buying Shares from Company :"+ cust_availablebalance);  
-	     
-	           	}
-		}
-		
-//		  String choice1="yes";
-//          System.out.println("Do You Want to Save this Transaction");
-//          String choice=Utility.isString();
-//          if(choice==choice1)
-//          {
-//          	StockMethod.save(choice, choice1);
-//          }
+       
           
 		
 	}
@@ -149,7 +109,7 @@ static StockModel list;
 	 * @param name
 	 */
 	
-	public static void save(String stockaccount,String name) {
+	public void save() {
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -162,12 +122,7 @@ static StockModel list;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-//		
-//		 String save="YES";
-//	     String cancel="NO";
-//	     
-	      
+		       
 	}
 	
 	
