@@ -20,7 +20,7 @@ import com.bridgelabz.commercial.model.Customer;
 import com.bridgelabz.commercial.model.StockModel;
 
 public class StockMethod {
-
+static StockModel list;
 /**
  * Purpose : Method for reading json file and store file into list.
  * @return
@@ -32,8 +32,8 @@ public class StockMethod {
 	{
 
 		ObjectMapper mapper=new ObjectMapper();
-		BufferedReader reader = new BufferedReader(new FileReader("/home/bridgeit/Desktop/stockaccount.json" ));
-		StockModel list = mapper.readValue(reader, StockModel.class);
+		File file = new File("/home/bridgeit/Desktop/account.json" );
+		StockModel list = mapper.readValue(file, StockModel.class);
 	    System.out.println(list); 
 	    list.getCustomer(); 
 	    list.getCompany();
@@ -82,15 +82,15 @@ public class StockMethod {
      
            	}
            }     
-            String choice1="yes";
-            System.out.println("Do You Want to Save this Transaction");
-            String choice=Utility.isString();
-            if(choice==choice1)
-            {
-            	StockMethod.save(choice, choice1);
-            }
-            
-        
+//            String choice1="yes";
+//            System.out.println("Do You Want to Save this Transaction");
+//            String choice=Utility.isString();
+//            if(choice==choice1)
+//            {
+//            	StockMethod.save(choice, choice1);
+//            }
+//            
+//        
          }
            
           
@@ -132,13 +132,13 @@ public class StockMethod {
 	           	}
 		}
 		
-		  String choice1="yes";
-          System.out.println("Do You Want to Save this Transaction");
-          String choice=Utility.isString();
-          if(choice==choice1)
-          {
-          	StockMethod.save(choice, choice1);
-          }
+//		  String choice1="yes";
+//          System.out.println("Do You Want to Save this Transaction");
+//          String choice=Utility.isString();
+//          if(choice==choice1)
+//          {
+//          	StockMethod.save(choice, choice1);
+//          }
           
 		
 	}
@@ -153,7 +153,7 @@ public class StockMethod {
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			mapper.writeValue(new File("/home/bridgeit/Desktop/stockaccount.json" ), mapper);
+			mapper.writeValue(new File("/home/bridgeit/Desktop/account.json" ), list);
 			System.out.println("\n Saved");
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
