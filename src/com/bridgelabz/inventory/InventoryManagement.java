@@ -27,7 +27,7 @@ public class InventoryManagement  {
 	public static void main(String[] args) throws Exception {
 
     ObjectMapper mapper=new ObjectMapper();
-    BufferedReader reader = new BufferedReader(new FileReader("/home/bridgeit/Desktop/management.json" ));
+    BufferedReader reader = new BufferedReader(new FileReader("/home/admin106/Documents/jsonfile/management.json" ));
      
     Inventory inventory=new Inventory();
     InventoryMethods1.display(inventoryList);

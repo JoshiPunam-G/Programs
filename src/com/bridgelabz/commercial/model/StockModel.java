@@ -5,7 +5,8 @@ import java.util.List;
 public class StockModel {
 	List<Customer> customer;
 	List<Company> company;
-	List<Transaction> transaction;
+    List<transaction> transaction;
+	
 	
 	@Override
 	public String toString() {
@@ -23,10 +24,10 @@ public class StockModel {
 	public void setCompany(List<Company> company) {
 		this.company = company;
 	}
-	public List<Transaction> getTransaction() {
+	public List<transaction> getTransaction() {
 		return transaction;
 	}
-	public void setTransaction(List<Transaction> transaction) {
+	public void setTransaction(List<transaction> transaction) {
 		this.transaction = transaction;
 	}
 	

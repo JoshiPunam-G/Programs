@@ -2,13 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="JSONFILE"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/bridgeit/Downloads/jackson-core-asl-1.9.13.jar"/>
-	<classpathentry kind="lib" path="/home/bridgeit/Downloads/jackson-all-1.9.9.jar"/>
-	<classpathentry kind="lib" path="/home/bridgeit/Downloads/jar_files/json-simple-1.1.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/admin106/Downloads/jackson-all-1.9.9.jar"/>
+	<classpathentry kind="lib" path="/home/admin106/Downloads/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
