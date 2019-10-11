@@ -5,11 +5,11 @@ import java.util.regex.Pattern;
 
 public class RegexDemo {
 	 public String replaceWithFirst(String str,String replace)
-	   {   
+	 {   
 	        Pattern ptn = Pattern.compile("\\s+");
 	        Matcher mtch = ptn.matcher(str);
 	        return mtch.replaceAll(replace);
-	    }
+	  }
 	 
 	 public String replaceWithFull(String replace,String str2)
 	 {

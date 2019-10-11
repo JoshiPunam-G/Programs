@@ -22,10 +22,9 @@ public class DeckOfCards {
 		    /* Display the first four cards */ 
 		    for (int i = 0; i < 4; i++) 
 		    {
-		      String suit1 = suit[cards[i] / 13];
-		      String rank1 = rank[cards[i] % 13];
-		      System.out.println("Card number " + cards[i] + ": " 
-		        + rank1 + " of " + suit1);
+		      String suits = suit[cards[i] / 13];
+		      String ranks = rank[cards[i] % 13];
+		      System.out.println("Card number " + cards[i] + ": "   + ranks + " of " + suits);
 	       }
 
 }
