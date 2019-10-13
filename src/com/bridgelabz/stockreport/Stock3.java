@@ -1,11 +1,11 @@
 package com.bridgelabz.stockreport;
 
 public class Stock3 {
-
-
 	private String stockName;
 	private int noOfShare;
 	private long pricePerShare;
+	
+	
 	public String getStockName() {
 		return stockName;
 	}

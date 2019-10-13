@@ -5,8 +5,22 @@ private String patientName;
 private int patientId;
 private long mobileNo;
 private int age;
+
+
+
+public Patient(String patientName, int patientId, long mobileNo, int age) {
+	super();
+	this.patientName = patientName;
+	this.patientId = patientId;
+	this.mobileNo = mobileNo;
+	this.age = age;
+}
 public String getPatientName() {
 	return patientName;
+}
+public Patient() {
+	super();
+	// TODO Auto-generated constructor stub
 }
 public void setPatientName(String patientName) {
 	this.patientName = patientName;

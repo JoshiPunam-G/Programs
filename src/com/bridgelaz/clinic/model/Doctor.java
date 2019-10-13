@@ -5,11 +5,25 @@ public class Doctor {
 	private int doctorId;
 	private String specialization;
 	private String availability;
+	
+	
+	
+	public Doctor(String doctorName, int doctorId, String specialization, String availability) {
+		super();
+		this.doctorName = doctorName;
+		this.doctorId = doctorId;
+		this.specialization = specialization;
+		this.availability = availability;
+	}
 	public String getDoctorName() {
 		return doctorName;
 	}
 	public void setDoctorName(String doctorName) {
 		this.doctorName = doctorName;
+	}
+	public Doctor() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public int getDoctorId() {
 		return doctorId;

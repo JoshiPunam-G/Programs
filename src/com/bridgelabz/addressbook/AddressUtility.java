@@ -2,6 +2,7 @@ package com.bridgelabz.addressbook;
 
 import java.io.File;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -40,8 +41,6 @@ public class AddressUtility {
 		File file=new File("/home/admin106/Documents/jsonfile/address.json");
 		AddressBookModel list=mapper.readValue(file, AddressBookModel.class);
 		System.out.println(list);
-		
-	
 		return list;
 		
 	}
