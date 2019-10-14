@@ -39,27 +39,22 @@ public class ClinicImpl implements ClinicInterface{
 			
 		
 		ClinicUtility utill=new ClinicUtility();
+	
 		
-		//utill.addUser(userlist);
-		//utill.addClinic(cliniclist);
-		//utill.addDoctor(doctorlist);
-		//utill.addPatient(patientlist);
-		utill.addAppointment(appointmentlist);
-		
-//		System.out.println("1.Add User ");
-//		System.out.println("2.Add Clinic ");
-		
-
+      System.out.println("----CLINIC MANAGEMENT SYSTEM-----");
 		
         int count=0;
         
         while(count>=0)
         {
+        	System.out.println();
         	System.out.println("1.Add doctor");
             System.out.println("2.Add Patient");
-            System.out.println("3.Add Appointment ");
+            System.out.println("3.Take Appointment ");
             System.out.println("4.Search Doctor");
             System.out.println("5.Search Patient");
+            System.out.println("6.Popular Doctors");
+            System.out.println("7.EXIT");
            
             System.out.println();
             System.out.println("Enter Your Choice");
@@ -76,7 +71,7 @@ public class ClinicImpl implements ClinicInterface{
         		break;
         		
         	case 3:
-        		utill.addAppointment(appointmentlist);
+        	    utill.fixAppointment(doctorlist, patientlist);
         		break;
         		
         	case 4:
@@ -181,6 +176,15 @@ public class ClinicImpl implements ClinicInterface{
         				return;
         			}
         		}
+        		
+        	case 6:
+        		utill.popular(doctorlist, appointmentlist);
+        		break;
+        		
+        	case 7:
+        		System.out.println("EXIT");
+        		count=1;
+        		return;
         	
         		
         		default:
@@ -195,9 +199,6 @@ public class ClinicImpl implements ClinicInterface{
 	 catch (IOException e) {
 		e.printStackTrace();
 	}
-
-	
-	
 	
 	}
 
