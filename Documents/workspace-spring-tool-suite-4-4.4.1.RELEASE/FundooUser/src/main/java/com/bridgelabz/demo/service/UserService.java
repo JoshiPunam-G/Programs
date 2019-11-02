@@ -1,0 +1,129 @@
+package com.bridgelabz.demo.service;
+
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.bridgelabz.demo.model.User;
+import com.bridgelabz.demo.model.UserDTO;
+import com.bridgelabz.demo.repository.UserRepository;
+
+@Service
+public class UserService {
+	@Autowired
+	private UserRepository repository;
+
+	@Autowired
+	private ModelMapper mapper;
+
+	/**
+	 * create User
+	 * 
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @return
+	 */
+	public User create(@RequestBody User user) {
+		return repository.save(user);
+	}
+
+	/**
+	 * Login Using Username and password
+	 * 
+	 * @param username
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean login(UserDTO userdto) throws Exception {
+		// User user1 = mapper.map(userdto, User.class);
+		User user = repository.findByEmail(userdto.getEmail());
+		if (user == null) {
+			return false;
+		} else if (user.getEmail().contentEquals(userdto.getEmail()))
+			return true;
+		else
+			return false;
+
+		// List<User> login = repository.searchByEmail(userdto.getEmail());
+//
+//		if (user == null) {
+//			return true;
+//		} // throw new Exception("User not found " +user )
+//		else if (login.stream().filter(u -> u.getPassword().equals(userdto.getPassword())).findAny()
+//				.orElse(null) == null) {
+//			throw new Exception("User not found with username: ");
+//		}
+//		return false;
+
+	}
+
+	/**
+	 * Update the User Info
+	 * 
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	public User update(String username, String password, String email) throws Exception {
+		User user = repository.findByUsername(email);
+		if (user == null) {
+			throw new Exception("user not found");
+		}
+		user.setPassword(password);
+		user.setUsername(username);
+		return repository.save(user);
+	}
+
+	/**
+	 * Delete user by username
+	 * 
+	 * @param username
+	 * @return
+	 * @return
+	 * @throws Exception
+	 */
+	public User delete(String email) throws Exception {
+		User user = repository.findByUsername(email);
+		if (user == null) {
+			throw new Exception("Email not found");
+		} else {
+			repository.delete(user);
+		}
+		return user;
+	}
+
+	/**
+	 * Retrieve All User
+	 * 
+	 * @return
+	 */
+	public List<User> findAll() {
+		return repository.findAll();
+	}
+
+	/**
+	 * Find User By Username
+	 * 
+	 * @param username
+	 * @return
+	 */
+
+	public User getByUsername(String username) {
+		return repository.findByUsername(username);
+	}
+
+	/**
+	 * Delete All USer
+	 */
+	public void deleteAll() {
+		repository.deleteAll();
+	}
+
+}
