@@ -21,6 +21,22 @@ public class UserController {
 	@Autowired
 	public UserService userservice;
 
+	
+
+	/**
+	 * login
+	 * 
+	 * @throws Exceptions
+	 */
+	@GetMapping("/login")
+	public ResponseEntity<String> login(@RequestBody UserDTO userdto) throws Exception {
+		if (userservice.login(userdto)) {
+			return new ResponseEntity<String>("Login successfully..", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Register...", HttpStatus.BAD_REQUEST);
+
+	}
+	
 	/**
 	 * create user
 	 * 
@@ -45,19 +61,6 @@ public class UserController {
 		return userservice.getByUsername(username);
 	}
 
-	/**
-	 * login
-	 * 
-	 * @throws Myexceptions
-	 */
-	@GetMapping("/login")
-	public ResponseEntity<String> login(@RequestBody UserDTO userdto) throws Exception {
-		if (userservice.login(userdto)) {
-			return new ResponseEntity<String>("Login successfully..", HttpStatus.OK);
-		}
-		return new ResponseEntity<String>("Register...", HttpStatus.BAD_REQUEST);
-
-	}
 
 	/**
 	 * Update All User

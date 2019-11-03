@@ -2,7 +2,6 @@ package com.bridgelabz.demo.service;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -14,14 +13,14 @@ import com.bridgelabz.demo.repository.UserRepository;
 
 @Service
 public class UserService {
+
 	@Autowired
 	private UserRepository repository;
 
-	@Autowired
-	private ModelMapper mapper;
+	
 
 	/**
-	 * create User
+	 * Register User
 	 * 
 	 * @param username
 	 * @param password
@@ -40,25 +39,14 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public boolean login(UserDTO userdto) throws Exception {
-		// User user1 = mapper.map(userdto, User.class);
 		User user = repository.findByEmail(userdto.getEmail());
+		System.out.println("user: " + user);
 		if (user == null) {
 			return false;
 		} else if (user.getEmail().contentEquals(userdto.getEmail()))
 			return true;
 		else
 			return false;
-
-		// List<User> login = repository.searchByEmail(userdto.getEmail());
-//
-//		if (user == null) {
-//			return true;
-//		} // throw new Exception("User not found " +user )
-//		else if (login.stream().filter(u -> u.getPassword().equals(userdto.getPassword())).findAny()
-//				.orElse(null) == null) {
-//			throw new Exception("User not found with username: ");
-//		}
-//		return false;
 
 	}
 
@@ -72,7 +60,7 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public User update(String username, String password, String email) throws Exception {
-		User user = repository.findByUsername(email);
+		User user = repository.findByEmail(email);
 		if (user == null) {
 			throw new Exception("user not found");
 		}
@@ -90,7 +78,7 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public User delete(String email) throws Exception {
-		User user = repository.findByUsername(email);
+		User user = repository.findByEmail(email);
 		if (user == null) {
 			throw new Exception("Email not found");
 		} else {
