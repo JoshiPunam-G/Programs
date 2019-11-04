@@ -1,9 +1,17 @@
+/**
+ * Purpose : Implementation of Controller for Accessing Services implemented in service class .
+ * Author  : Punam Joshi 
+ * @version 1.0
+ * @since   2-11-2019  
+ */
+
 package com.bridgelabz.demo.controller;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,17 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.demo.model.User;
 import com.bridgelabz.demo.model.UserDTO;
+
 import com.bridgelabz.demo.service.UserService;
 
 @RestController
 public class UserController {
+	
 	@Autowired
 	public UserService userservice;
 
 	
 
 	/**
-	 * login
+	 * Purpose :Implementation for User Login
 	 * 
 	 * @throws Exceptions
 	 */
@@ -38,7 +48,7 @@ public class UserController {
 	}
 	
 	/**
-	 * create user
+	 * Purpose : Implementation for User Registration
 	 * 
 	 * @param user
 	 * @return
@@ -50,7 +60,7 @@ public class UserController {
 	}
 
 	/**
-	 * Retrieve All User
+	 * Purpose : Implementation for Retrieve All User
 	 * 
 	 * @param username
 	 * @return
@@ -63,7 +73,7 @@ public class UserController {
 
 
 	/**
-	 * Update All User
+	 * Purpose :Implementation for Update All User
 	 * 
 	 * @param username
 	 * @param password
@@ -79,7 +89,7 @@ public class UserController {
 	}
 
 	/**
-	 * Retrieve All User data
+	 * Purpose : Implementation for Retrieve All User data
 	 * 
 	 * @return
 	 */
@@ -90,7 +100,7 @@ public class UserController {
 	}
 
 	/**
-	 * Delete user By username
+	 *Purpose :Implementation for Delete user By username
 	 * 
 	 * @param username
 	 * @return
@@ -103,7 +113,7 @@ public class UserController {
 	}
 
 	/**
-	 * Delete All User
+	 * Purpose : Implementation for Delete All User
 	 * 
 	 * @return
 	 */
@@ -112,5 +122,17 @@ public class UserController {
 		userservice.deleteAll();
 		return "Record Deleted ";
 	}
+	
+	
+	/*
+	 * @PostMapping(path="/password-reset-request", produces=
+	 * {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, consumes=
+	 * {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}) public
+	 * OperationStatusModel requestReset(@RequestBody PasswordRequestModel
+	 * passwordrequestmodel) { OperationStatusModel returnValue=new
+	 * OperationStatusModel(); boolean
+	 * operationResult=userservice.requestPasswordReset(passwordrequestmodel.
+	 * getEmail) }
+	 */
 
 }

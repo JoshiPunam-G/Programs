@@ -1,14 +1,26 @@
+
+/**
+ * Purpose :Implementation Of UserDTO to reduce the number of calls when working with remote interface.
+ * Author  : Punam Joshi 
+ * @version 1.0
+ * @since   2-11-2019  
+ */
 package com.bridgelabz.demo.model;
+
+
 
 public class UserDTO {
 
 	private String email;
 	private String password;
+
 	
+	//constructor 
 	public UserDTO(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}
+	//getter and setter
 	public String getEmail() {
 		return email;
 	}
