@@ -6,7 +6,7 @@
  * @since   2-11-2019
  */
 
-package com.bridgelabz.demo.model;
+package com.bridgelabz.model.user;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

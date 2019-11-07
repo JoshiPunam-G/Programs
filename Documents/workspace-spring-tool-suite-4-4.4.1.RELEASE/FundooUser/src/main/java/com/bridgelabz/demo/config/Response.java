@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Response {
-	
 	private String  statusMessage;
 	private int statuscode;
 	private String token;

@@ -6,19 +6,17 @@
  * @since   2-11-2019  
  */
 package com.bridgelabz.demo.model;
-
-
-
 public class UserDTO {
 
 	private String email;
 	private String password;
-
-	
 	//constructor 
 	public UserDTO(String email, String password) {
 		this.email = email;
 		this.password = password;
+	}
+	public UserDTO() {
+		// TODO Auto-generated constructor stub
 	}
 	//getter and setter
 	public String getEmail() {

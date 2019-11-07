@@ -6,23 +6,21 @@
  */
 
 package com.bridgelabz.demo.controller;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.demo.model.User;
 import com.bridgelabz.demo.model.UserDTO;
-
 import com.bridgelabz.demo.service.UserService;
 
 @RestController
@@ -30,9 +28,11 @@ public class UserController {
 	
 	@Autowired
 	public UserService userservice;
-
 	
-
+	@Autowired
+	private BCryptPasswordEncoder bcrptpasswordencode;
+	
+	
 	/**
 	 * Purpose :Implementation for User Login
 	 * 
@@ -46,17 +46,20 @@ public class UserController {
 		return new ResponseEntity<String>("Register...", HttpStatus.BAD_REQUEST);
 
 	}
-	
+
 	/**
+	 * 
 	 * Purpose : Implementation for User Registration
 	 * 
 	 * @param user
 	 * @return
 	 */
 	@RequestMapping("/register")
-	public String create(@RequestBody User user) {
-		userservice.create(user);
-		return user.toString();
+	public String register(@RequestBody User user) {
+		String encodedpassword=bcrptpasswordencode.encode(user.getPassword());
+		User user1=new User(user.getUsername(),encodedpassword,user.getEmail());
+		userservice.create(user1);
+		return user1.toString();
 	}
 
 	/**
@@ -70,8 +73,6 @@ public class UserController {
 	public User getUser(@RequestParam String username) {
 		return userservice.getByUsername(username);
 	}
-
-
 	/**
 	 * Purpose :Implementation for Update All User
 	 * 
@@ -124,15 +125,22 @@ public class UserController {
 	}
 	
 	
-	/*
-	 * @PostMapping(path="/password-reset-request", produces=
-	 * {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}, consumes=
-	 * {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE}) public
-	 * OperationStatusModel requestReset(@RequestBody PasswordRequestModel
-	 * passwordrequestmodel) { OperationStatusModel returnValue=new
-	 * OperationStatusModel(); boolean
-	 * operationResult=userservice.requestPasswordReset(passwordrequestmodel.
-	 * getEmail) }
+    
+	/**
+	 * Purpose :Implementation of Forgot password
+	 * @param userdto
+	 * @return
+	 * @throws Exception
 	 */
+	@GetMapping("/forgetPassword")
+	public ResponseEntity<String> forgetPassword(@RequestBody UserDTO userdto) throws Exception {
+		if (userservice.forgetPassword(userdto)) {
+			return new ResponseEntity<String>("Password has been Changed Successfully ....", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("Sorry Password can't changed...", HttpStatus.BAD_REQUEST);
 
+	}
+	
+	
+	
 }
