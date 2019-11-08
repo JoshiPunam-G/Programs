@@ -41,6 +41,9 @@ public class UserController {
 	
 	@Autowired 
 	private EmailService mailservice;
+
+	 @Autowired 
+	 private Response response;
 	
 	
 	/**
@@ -50,11 +53,21 @@ public class UserController {
 	 */
 	@GetMapping("/login")
 	public ResponseEntity<String> login(@RequestBody UserDTO userdto) throws Exception {
-		if (userservice.login(userdto)) {
+		if (userservice.login(userdto) != null) {
 			return new ResponseEntity<String>("Login successfully..", HttpStatus.OK);
 		}
 		return new ResponseEntity<String>("User Not Found ,Register User ", HttpStatus.BAD_REQUEST);
 	}
+	
+	
+	/*
+	 * @GetMapping("/login1") public Response login1(@RequestBody UserDTO userdto)
+	 * throws Exception { if(userservice.login(userdto) != null) { return new
+	 * Response(response.getStatusMessage()
+	 * ,response.getStatuscode(),response.getToken()); } else { return new
+	 * Response(response.getStatusMessage()
+	 * ,response.getStatuscode(),response.getToken()); } }
+	 */
 
 	/**
 	 * 
@@ -70,8 +83,6 @@ public class UserController {
 		userservice.create(user1);
 		return new ResponseEntity<>("Registration Successfully.!" ,HttpStatus.OK);
 		//return user1.toString();
-		
-		
 	}
 
 	/**
@@ -135,9 +146,7 @@ public class UserController {
 		userservice.deleteAll();
 		return "Record Deleted ";
 	}
-	
-	
-    
+
 	/**
 	 * Purpose :Implementation of Forgot password
 	 * @param userdto

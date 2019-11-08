@@ -9,6 +9,12 @@ public class Response {
 	private String token;
 	
 	
+	public Response(String statusMessage, int statuscode, String token) {
+		super();
+		this.statusMessage = statusMessage;
+		this.statuscode = statuscode;
+		this.token = token;
+	}
 	public String getStatusMessage() {
 		return statusMessage;
 	}
@@ -27,7 +33,9 @@ public class Response {
 	public void setToken(String token) {
 		this.token = token;
 	}
-
+	@Override
+	public String toString() {
+		return "Response [statusMessage=" + statusMessage + ", statuscode=" + statuscode + ", token=" + token + "]";
+	}
 	
-
 }

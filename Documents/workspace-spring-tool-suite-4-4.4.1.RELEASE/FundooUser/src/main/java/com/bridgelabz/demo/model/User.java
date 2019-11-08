@@ -1,12 +1,15 @@
 
 /**
  * Purpose : Model Class For User Login.
+
  * Author  : Punam Joshi 
  * @version 1.0
  * @since   2-11-2019
  */
 
 package com.bridgelabz.demo.model;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,8 +17,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 	@Id
 	private String id;
+	//@NotEmpty(message = "username must not be empty")
 	private String username;
+//	@NotEmpty(message = "password must not be empty")
 	private String password;
+
 	private String email;
   
 	//constructor 
@@ -25,7 +31,6 @@ public class User {
 		this.password = password;
 		this.email = email;
 	}
-	
 	public String getId() {
 		return id;
 	}
@@ -61,9 +66,6 @@ public class User {
 	public boolean isPresent() {
 		return false;
 	}
-
-	
-
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";

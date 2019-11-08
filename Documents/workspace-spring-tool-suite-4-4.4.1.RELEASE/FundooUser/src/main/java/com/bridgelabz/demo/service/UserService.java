@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.bridgelabz.demo.Utility.TokenUtil;
 import com.bridgelabz.demo.config.Response;
+import com.bridgelabz.demo.exception.RecordNotFoundException;
 import com.bridgelabz.demo.model.EmailModel;
 import com.bridgelabz.demo.model.PasswordDTO;
 import com.bridgelabz.demo.model.User;
@@ -38,6 +39,7 @@ public class UserService implements UserInterface
 	 
 	 @Autowired
 	 TokenUtil tokenutil;
+	 
 	 /**
 		 *Purpose : API for Login Using email and password
 		 * @param password 
@@ -46,22 +48,25 @@ public class UserService implements UserInterface
 		 * @throws Exception
 		 */
 		
-		public boolean login(UserDTO userdto) throws Exception {
+		public Response login(UserDTO userdto) throws Exception {
 			User user = repository.findByEmail(userdto.getEmail());
 			System.out.println("user: " + user);
 			if (user == null) {
-				return false;
+				throw new RecordNotFoundException("Invalid EmailId : " + user);
 			}
 			else if (user.getEmail().contentEquals(userdto.getEmail()) && encoder.matches(userdto.getPassword(), user.getPassword()))
 			{	
 				user.setEmail(user.getEmail());
 			    user.setPassword(encoder.encode(user.getPassword()));
 			    repository.save(user);
-				return true;
+			    response.setStatusMessage("Login successfully..");
+			    response.setStatuscode(400);
 			}
 			else
-				return false;
-		
+			{
+				//throw new RecordNotFoundException("Invalid Details : " + user);
+			}
+			return response;
 		}
 	 /**
 		 * Purpose :Password Encryption for registration
@@ -219,5 +224,6 @@ public class UserService implements UserInterface
 		}
 		System.out.println("reset password Failure");
 		return false;
-	 }	
+	 }
+	
 }

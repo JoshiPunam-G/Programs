@@ -11,7 +11,7 @@ import com.bridgelabz.demo.model.UserDTO;
 public interface UserInterface  {
 	
 	public User create(@RequestBody User user);
-	public boolean login(UserDTO userdto) throws Exception ;
+	public Response login(UserDTO userdto) throws Exception ;
 	public Response register(User user);
 	public User update(String username, String password, String email) throws Exception;
 	public User delete(String email) throws Exception;

@@ -1,15 +1,11 @@
 package com.bridgelabz.demo.config;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.bridgelabz.demo.service.EmailService;
-
 @Configuration
 @EnableConfigurationProperties
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
@@ -38,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	  @Bean
 	  public Response response()
 	  {
-		  return new Response();
+		  return new Response(null, 0, null);
 	  }
 	
 }
