@@ -19,8 +19,8 @@ public class User {
 	private String email;
   
 	//constructor 
-	public User(String username, String password, String email) {
-	 
+	public User(String id ,String username, String password, String email) {
+	    this.id=id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
@@ -62,9 +62,11 @@ public class User {
 		return false;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "User [ username=" + username + ", password=" + password + ", email=" + email + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
 	}
 
 	public void setResetToken(Object object) {

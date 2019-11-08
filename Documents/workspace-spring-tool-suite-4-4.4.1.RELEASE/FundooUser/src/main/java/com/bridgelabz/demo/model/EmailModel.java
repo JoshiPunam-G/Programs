@@ -1,9 +1,4 @@
 package com.bridgelabz.demo.model;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-
 public class EmailModel {
 
 	private String from;
@@ -38,8 +33,5 @@ public class EmailModel {
 	}
 	public void setBody(String body) {
 		this.body = body;
-	}
-	
-
-	
+	}	
 }

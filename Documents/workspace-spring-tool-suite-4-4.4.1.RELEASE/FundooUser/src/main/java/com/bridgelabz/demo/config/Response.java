@@ -7,6 +7,8 @@ public class Response {
 	private String  statusMessage;
 	private int statuscode;
 	private String token;
+	
+	
 	public String getStatusMessage() {
 		return statusMessage;
 	}

@@ -18,4 +18,5 @@ public interface UserInterface  {
 	public List<User> findAll();
 	public User getByUsername(String username);
 	public void deleteAll();
-}
+//	public EmailService sendEmail() throws Exception;
+	}

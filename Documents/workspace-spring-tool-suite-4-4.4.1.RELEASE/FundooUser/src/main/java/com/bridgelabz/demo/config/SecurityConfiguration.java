@@ -8,11 +8,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.bridgelabz.demo.service.EmailService;
+
 @Configuration
 @EnableConfigurationProperties
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-	 
+	
 	  @Bean 
 	  public PasswordEncoder passwordEncoder() 
 	  { 
@@ -25,7 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	      .csrf().disable()
 	      .authorizeRequests()
 	      .antMatchers("HttpMethod.POST,/register").permitAll()
-	      .antMatchers("HttpMethod.POST,/login")
+	      .antMatchers("HttpMethod.POST,/login").permitAll()
+	      .antMatchers("HttpMethod.POST/forgetPassword").permitAll()
+	      .antMatchers("HttpMethod.PUT/resetPassword/{token}")
 	      .authenticated()
 	      .and().httpBasic()
 	      .and().sessionManagement().disable();
@@ -36,5 +40,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	  {
 		  return new Response();
 	  }
-	 
+	
 }
