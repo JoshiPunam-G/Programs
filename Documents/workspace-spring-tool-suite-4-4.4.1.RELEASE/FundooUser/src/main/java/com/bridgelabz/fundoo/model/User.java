@@ -1,12 +1,18 @@
 
 /**
  * Purpose : Model Class For User Login.
+
  * Author  : Punam Joshi 
  * @version 1.0
  * @since   2-11-2019
  */
 
-package com.bridgelabz.model.user;
+package com.bridgelabz.fundoo.model;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,18 +20,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 	@Id
 	private String id;
+	@NotBlank(message = "username must not be empty")
 	private String username;
+	@NotBlank(message="password must not be empty")
 	private String password;
+	@NotBlank(message="email must not be empty")
 	private String email;
   
 	//constructor 
-	public User(String username, String password, String email) {
-	 
+	public User(String id ,String username, String password, String email) {
+	    this.id=id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 	}
-	
 	public String getId() {
 		return id;
 	}
@@ -61,13 +69,13 @@ public class User {
 	public boolean isPresent() {
 		return false;
 	}
-
 	@Override
 	public String toString() {
-		return "User [ username=" + username + ", password=" + password + ", email=" + email + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
 	}
 
 	public void setResetToken(Object object) {
 	}
+	
 
 }

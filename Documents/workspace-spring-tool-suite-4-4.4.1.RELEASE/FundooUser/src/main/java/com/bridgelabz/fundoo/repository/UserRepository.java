@@ -4,12 +4,13 @@
  * @version 1.0
  * @since   2-11-2019   
  */
-package com.bridgelabz.demo.repository;
+package com.bridgelabz.fundoo.repository;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bridgelabz.demo.model.User;
+import com.bridgelabz.fundoo.model.User;
+import com.bridgelabz.fundoo.user.dto.RegisterDTO;
 
 
 @Repository
@@ -19,8 +20,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 	public User findByEmail(String email);
 	
-	public Optional<User> findById(String id);
+	public Optional<User> findById(String email);
 	
-	
-	
+//	public Optional<RegisterDTO> findByEmailId(String email);
 }

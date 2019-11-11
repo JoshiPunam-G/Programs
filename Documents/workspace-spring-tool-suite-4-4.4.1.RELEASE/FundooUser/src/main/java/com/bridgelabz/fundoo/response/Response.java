@@ -1,4 +1,4 @@
-package com.bridgelabz.demo.config;
+package com.bridgelabz.fundoo.response;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,15 +8,20 @@ public class Response {
 	private int statuscode;
 	private String token;
 	
-	
-	public Response(String statusMessage, int statuscode, String token) {
+	//private String token;
+
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+	public Response(String statusMessage, int statuscode,String token) {
 		super();
 		this.statusMessage = statusMessage;
 		this.statuscode = statuscode;
-		this.token = token;
+		this.token=token;
 	}
-	public String getStatusMessage() {
-		return statusMessage;
+	public Response() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
@@ -30,12 +35,15 @@ public class Response {
 	public String getToken() {
 		return token;
 	}
-	public void setToken(String token) {
-		this.token = token;
-	}
 	@Override
 	public String toString() {
 		return "Response [statusMessage=" + statusMessage + ", statuscode=" + statuscode + ", token=" + token + "]";
 	}
+	public void setToken(String token) {
+		this.token = token;
+	}
+	
+
+	
 	
 }

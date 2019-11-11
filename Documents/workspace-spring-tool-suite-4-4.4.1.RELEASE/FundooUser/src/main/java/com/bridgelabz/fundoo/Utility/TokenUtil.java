@@ -1,4 +1,4 @@
-package com.bridgelabz.demo.Utility;
+package com.bridgelabz.fundoo.Utility;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;

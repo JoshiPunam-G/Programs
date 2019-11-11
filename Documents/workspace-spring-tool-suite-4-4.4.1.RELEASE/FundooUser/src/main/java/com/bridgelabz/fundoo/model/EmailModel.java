@@ -1,4 +1,4 @@
-package com.bridgelabz.demo.model;
+package com.bridgelabz.fundoo.model;
 public class EmailModel {
 
 	private String from;

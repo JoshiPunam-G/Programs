@@ -1,4 +1,4 @@
-package com.bridgelabz.demo.model;
+package com.bridgelabz.fundoo.user.dto;
 
 public class PasswordDTO {
 	private String newpassword;

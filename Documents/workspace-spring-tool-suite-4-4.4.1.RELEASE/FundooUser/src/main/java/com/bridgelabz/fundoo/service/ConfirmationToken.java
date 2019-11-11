@@ -1,4 +1,4 @@
-package com.bridgelabz.demo.service;
+package com.bridgelabz.fundoo.service;
 
 public interface ConfirmationToken {
 

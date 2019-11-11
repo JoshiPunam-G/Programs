@@ -1,17 +1,10 @@
-package com.bridgelabz.demo;
-
-
-
+package com.bridgelabz.fundoo;
 import org.springframework.boot.SpringApplication;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Service;
 
-
-
-//@EnableMongoRepositories("com.bridgelabz.demo.repository")
-
+//@ComponentScan({"com.bridgelabz.fundoo.controller.UserController" ,"com.bridgelabz.fundoo.repository"})
+//@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,WebMvcAutoConfiguration.class})
 @SpringBootApplication
 public class FundooUserApplication {
 	

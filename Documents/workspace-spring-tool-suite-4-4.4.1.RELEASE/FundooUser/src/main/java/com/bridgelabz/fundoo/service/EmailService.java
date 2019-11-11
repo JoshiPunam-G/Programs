@@ -1,11 +1,12 @@
-package com.bridgelabz.demo.service;
+package com.bridgelabz.fundoo.service;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import com.bridgelabz.demo.Utility.TokenUtil;
-import com.bridgelabz.demo.model.EmailModel;
+
+import com.bridgelabz.fundoo.Utility.TokenUtil;
+import com.bridgelabz.fundoo.model.EmailModel;
 
 @Service
 public class EmailService {
