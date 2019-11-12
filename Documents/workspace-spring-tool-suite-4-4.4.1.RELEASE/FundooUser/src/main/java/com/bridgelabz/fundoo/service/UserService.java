@@ -7,6 +7,7 @@
 package com.bridgelabz.fundoo.service;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -17,9 +18,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.NotFoundException;
 import com.bridgelabz.fundoo.exception.UserServiceException;
@@ -69,25 +68,22 @@ public class UserService implements UserInterface {
     {
     	Response response;
 		User user = repository.findByEmail(userdto.getEmail());
+		System.out.println(user);
 		boolean flag=encoder.matches(userdto.getPassword(), user.getPassword());
-	
-
 		if (flag) {
 			String tokengenerate=TokenUtil.createtoken(user.getId());
+			System.out.println(tokengenerate);
 			response=ResponseStatus.tokenstatusInformation(environment.getProperty("status.login.success"),
 		    		Integer.parseInt(environment.getProperty("status.success.code")),tokengenerate);	
 			response.setStatusMessage(environment.getProperty("status.login.success"));
-			return response;
 		}
 		else
 		{
 			response=ResponseStatus.statusInformation(environment.getProperty("status.login.incorrectpassword"),
 		    		Integer.parseInt(environment.getProperty("status.invalid.details")));	
 			response.setStatusMessage(environment.getProperty("status.login.incorrectpassword"));
-			return response;
-			
 		}
-		
+		return response;
 	}
 
 	/**

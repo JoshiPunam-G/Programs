@@ -9,12 +9,16 @@
 
 package com.bridgelabz.fundoo.model;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.bridgelabz.fundoo.label.model.Label;
 
 @Document
 public class User {
@@ -26,7 +30,15 @@ public class User {
 	private String password;
 	@NotBlank(message="email must not be empty")
 	private String email;
+	
+	private String note;
   
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
 	//constructor 
 	public User(String id ,String username, String password, String email) {
 	    this.id=id;
@@ -69,12 +81,17 @@ public class User {
 	public boolean isPresent() {
 		return false;
 	}
+	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", note="
+				+ note + "]";
 	}
-
 	public void setResetToken(Object object) {
+	}
+	public List<Label> getLabel() {
+		
+		return null;
 	}
 	
 

@@ -14,15 +14,6 @@ public class EmailService {
 	  @Autowired
 	  private JavaMailSender mailsender;
 	 
-	/*
-	 * public EmailService(JavaMailSender mailsender) { this.mailsender =
-	 * mailsender; }
-	 * 
-	 * public EmailService() {
-	 * 
-	 * }
-	 */
-
 	/**
 	 * Purpose :Implementation Of Java Mail
 	 * 

@@ -19,8 +19,11 @@ public class Response {
 		this.statuscode = statuscode;
 		this.token=token;
 	}
-	public Response() {
+	public Response(int i, String string) {
 		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Response() {
 		// TODO Auto-generated constructor stub
 	}
 	public void setStatusMessage(String statusMessage) {

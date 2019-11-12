@@ -31,19 +31,9 @@ public class SecurityConfiguration {
 	    public Docket productApi() {
 	        return new Docket(DocumentationType.SWAGGER_2)
 	                .select().apis(RequestHandlerSelectors.basePackage("com.bridgelabz.demo"))
-	                //.paths(regex("/product.*"))
 	                .build();
 	    }
 	 
-	/*
-	 * @Override protected void configure(HttpSecurity http) throws Exception { http
-	 * .csrf().disable() .authorizeRequests()
-	 * .antMatchers("HttpMethod.POST,/register") //
-	 * .antMatchers("HttpMethod.POST,/login").permitAll() //
-	 * .antMatchers("HttpMethod.POST/forgetPassword").permitAll()
-	 * //.antMatchers("HttpMethod.PUT/resetPassword/{token}") .authenticated()
-	 * .and().httpBasic() .and().sessionManagement().disable(); }
-	 */
 	  @Bean
 	  public ModelMapper model()
 	  {
@@ -55,8 +45,7 @@ public class SecurityConfiguration {
 	  @Bean
 	  public Response response()
 	  {
-		  return new Response();
+		  return new Response(0, null);
 	  }
-	
-	
+
 }
