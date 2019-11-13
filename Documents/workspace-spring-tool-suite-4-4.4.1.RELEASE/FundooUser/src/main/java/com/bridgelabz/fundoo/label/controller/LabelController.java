@@ -1,8 +1,16 @@
+
+/**
+ * Purpose : Implementation of Controller for Accessing Services implemented in service class .
+ * Author  : Punam Joshi 
+ * @version 1.0
+ * @since   12-11-2019  
+ */
+
 package com.bridgelabz.fundoo.label.controller;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +18,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
 import com.bridgelabz.fundoo.label.model.Label;
@@ -22,34 +29,86 @@ public class LabelController {
 	
 	@Autowired
 	private LabelService labelservice;
-	
+	/**
+	 * Purpose :create label
+	 * @param labeldto
+	 * @param Token
+	 * @return
+	 * @throws UserServiceException
+	 */
 	@PostMapping("/createlabel")
-	public Response createLabel(@RequestBody LabelDTO labeldto,@RequestHeader String Token) throws UserServiceException
+	public ResponseEntity<Response> createLabel(@RequestBody LabelDTO labeldto,@RequestHeader String Token) throws UserServiceException
 	{
-		return labelservice.createLabel(labeldto, Token);
+		Response response=labelservice.createLabel(labeldto, Token);
+	    return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
+	
+	/**
+	 * Purpose :update label
+	 * @param labeldto
+	 * @param token
+	 * @param labelId
+	 * @return
+	 * @throws UserServiceException
+	 */
 	
 	@PostMapping("/updatelabel")
-	public Response updateLabel(LabelDTO labeldto, String token, String labelId) throws UserServiceException
+	public ResponseEntity<Response> updateLabel(@RequestBody LabelDTO labeldto,@RequestHeader String token,@RequestHeader String labelId) throws UserServiceException
 	{
-		return labelservice.updateLabel(labeldto, token, labelId);
+		Response response=labelservice.updateLabel(labeldto, token, labelId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
+	/**
+	 * Purpose :delete Label
+	 * @param token
+	 * @param labelId
+	 * @return
+	 * @throws UserServiceException
+	 */
 	@DeleteMapping("/deletelabel")
-	public Response deleteLabel(String token, String labelId) throws UserServiceException {
-		return labelservice.deleteLabel(token, labelId);
+	public ResponseEntity<Response> deleteLabel(@RequestHeader String token,@RequestHeader String labelId) throws UserServiceException {
+		Response response=labelservice.deleteLabel(token, labelId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
+	/**
+	 * Purpose :add Label
+	 * @param labelId
+	 * @param token
+	 * @param noteId
+	 * @return
+	 * @throws UserServiceException
+	 */
 	@PutMapping("/addlabel")
-	public Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException 
+	public ResponseEntity<Response> addlabeltoNote(@RequestHeader String labelId,@RequestHeader String token,@RequestHeader String noteId) throws UserServiceException 
 	{
-		return labelservice.addlabeltoNote(labelId, token, noteId);
+		Response response=labelservice.addlabeltoNote(labelId, token, noteId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
+	/**
+	 * Purpose : Retrieve All Label
+	 * @param token
+	 * @return
+	 * @throws UserServiceException
+	 */
 	
 	@GetMapping("/getLabel")
-	public List<Label> getAll()
+	public List<Label> getAllLabelFromUser(@RequestHeader String token) throws UserServiceException 
 	{
-		return labelservice.getAll();
+		return labelservice.getAllLabelFromUser(token);
 	}
+	
+	/**
+	 * Purpose :Retrieve All Label
+	 * @return
+	 */
+	
+	@GetMapping("/getAllLabel")
+	public List<Label> getAllLabel()
+	{
+		return labelservice.getAllLabel();
+	}
+
 }

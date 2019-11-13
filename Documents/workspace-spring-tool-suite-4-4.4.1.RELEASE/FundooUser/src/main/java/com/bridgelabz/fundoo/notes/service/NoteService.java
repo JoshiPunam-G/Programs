@@ -1,3 +1,11 @@
+/**
+ * Purpose : Implementation of Service for note.
+ * Author  : Punam Joshi 
+ * @version 1.0
+ * @since   11-11-2019  
+ */
+
+
 package com.bridgelabz.fundoo.notes.service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +42,7 @@ public class NoteService implements NoteInterface {
 	@Autowired
 	private ModelMapper mapper;
 
-	private Response response;
+	//private Response response;
 
 	/**
 	 * Purpose :API for Create Note
@@ -48,8 +56,8 @@ public class NoteService implements NoteInterface {
 		if (notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty()) {
 			throw new UserServiceException(10, "Title and description are empty", tokenNote);
 		} 
-		Note note=mapper.map(notedto, Note.class);
-		Optional<User> user=repository.findById(tokenNote);
+		 Note note=mapper.map(notedto, Note.class);
+  		 Optional<User> user=repository.findById(tokenNote);
 		 note.setUserId(tokenNote);
 		 note.setCreateDate(LocalDateTime.now());
 		 note.setModified(LocalDateTime.now());
@@ -64,6 +72,7 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response update(NoteDTO notedto, String noteId) throws UserServiceException {
+		System.out.println("In Update Note");
 		Note note = noterepository.findByNoteId(noteId);
 		if(notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty())
 		{
@@ -96,13 +105,15 @@ public class NoteService implements NoteInterface {
 			{
 				note.setStatusArchieve(true);
 				noterepository.save(note);
-			    return new Response(30,environment.getProperty("status.note.archieve"));
+			    Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.archieve"),200);
+				return response;
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				return new Response(100,environment.getProperty("status.note.unarchieve"));
+				 Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.unarchieve"),200);
+					return response;
 			}
 		}
 	
@@ -124,13 +135,15 @@ public class NoteService implements NoteInterface {
 			{
 				note.setStatusPinUnpin(true);
 				noterepository.save(note);
-			    return new Response(30,environment.getProperty("status.note.archieve"));
+				Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.pin"),200);
+				return response;
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				return new Response(100,environment.getProperty("status.note.unarchieve"));
+				Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.unpin"),200);
+				return response;
 			}
 	}
 	
@@ -152,13 +165,15 @@ public class NoteService implements NoteInterface {
 		{
 			note.setStatusTrashUntrash(true);
 			noterepository.save(note);
-		    return new Response(30,environment.getProperty("note.trash"));
+			Response response = ResponseStatus.statusInformation(environment.getProperty("note.trash"),200);
+			return response;
 		}
 		else
 		{
 			note.setStatusArchieve(false);
 			noterepository.save(note);
-			return new Response(100,environment.getProperty("note.untrash"));
+			Response response = ResponseStatus.statusInformation(environment.getProperty("note.untrash"),200);
+			return response;
 		}
 	}
 
@@ -175,30 +190,30 @@ public class NoteService implements NoteInterface {
 			if (note.isPresent()) {
 				if (note.get().isStatusTrashUntrash() == true) {
 					noterepository.deleteByNoteId(noteId);
-					return new Response(300, environment.getProperty("note.delete"));
+					Response response = ResponseStatus.statusInformation(environment.getProperty("note.delete"),200);
+					return response;
 				} else {
 					noterepository.save(note.get());
-					return new Response(200, environment.getProperty("notNot.deleted"));
+					Response response = ResponseStatus.statusInformation(environment.getProperty("notNot.deleted"),200);
+					return response;
 				}
 			} else {
-
-				return new Response(500, environment.getProperty("note.NotPresent"));
+				Response response = ResponseStatus.statusInformation(environment.getProperty("note.NotPresent"),200);
+				return response;
 			}
 
-		} else {
-			return new Response(500, environment.getProperty("note.invalid"));
+		} else {	
+			Response response = ResponseStatus.statusInformation(environment.getProperty("note.invalid"),200);
+			return response;
 		}
-
 	}
 	 
-    
 /**
  * Purpose : Retrieve All Note
  */
 
 @Override
 public List<Note> getAllNote() {
-	System.out.println("get All");
 		return noterepository.findAll();
     }
 

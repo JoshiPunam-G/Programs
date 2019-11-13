@@ -20,10 +20,8 @@ public class Note {
 	private boolean statusTrashUntrash;
 	private String userId;
 	private LocalDateTime now;
+    
 
-	
-	
-	
 	public String getUserId() {
 		return userId;
 	}
@@ -79,13 +77,16 @@ public class Note {
 				+ createDate + ", statusArchieve=" + statusArchieve + ", statusPinUnpin=" + statusPinUnpin
 				+ ", statusTrashUntrash=" + statusTrashUntrash + ", userId=" + userId + "]";
 	}
+	
+	private List<Label> labellist;
+	
 	public void setModified(LocalDateTime now) {
 		this.now=now;
 		
 	}
 	public List<Label> getListLabel() {
 	
-		return getListLabel();
+		return labellist;
 	}
 	
 }

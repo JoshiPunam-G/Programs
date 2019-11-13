@@ -1,11 +1,19 @@
+/**
+ * Purpose : Implementation of service for Label.
+ * Author  : Punam Joshi 
+ * @version 1.0
+ * @since   12-11-2019  
+ */
+
+
 package com.bridgelabz.fundoo.label.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -17,6 +25,7 @@ import com.bridgelabz.fundoo.label.dto.LabelDTO;
 import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.label.repository.LabelRepository;
 import com.bridgelabz.fundoo.model.User;
+import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.notes.model.Note;
 import com.bridgelabz.fundoo.notes.repository.NoteRepository;
 import com.bridgelabz.fundoo.repository.UserRepository;
@@ -41,15 +50,14 @@ public class LabelService implements LabelInterface{
 	
 	@Autowired
 	private ModelMapper mapper;
-   
-	/**
-	 * Purpose :API For CreateLabel
-	 */
 	
+	
+   /**
+    * Purpose:API for create label
+    */
 	@Override
 	public Response createLabel(LabelDTO labeldto, String Token) throws UserServiceException {
 		String userId=TokenUtil.decodetoken(Token);
-		System.out.println(userId);
 		Optional<User> user=userrepository.findById(userId);
 		System.out.println(user);
 		if(!user.isPresent()) {
@@ -59,14 +67,12 @@ public class LabelService implements LabelInterface{
 		if(labelPresent.isPresent()) {
 			throw new UserServiceException(101,"User laready Exist");
 		}
+	//	User setuser=new User();
 		Label label = mapper.map(labeldto,Label.class);
 		label.setLabelName(labeldto.getLabelName());
-		//label.setUserId(userId);
 	    label.setLabelCreateDate(LocalDateTime.now());
 		label.setModified(LocalDateTime.now());
-		user.get().getLabel().add(label);
 		labelrepository.save(label);
-		userrepository.save(user.get());
 		Response response = ResponseStatus.statusInformation(environment.getProperty("status.success.createlabel"),100);
 			return response;
 	}
@@ -117,6 +123,10 @@ public class LabelService implements LabelInterface{
 		return response;
 	}
 
+	
+	/**
+	 * Purpose :API for Add Label to Note
+	 */
 	@Override
 	public Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException {
 		String userId = TokenUtil.decodetoken(token);
@@ -140,16 +150,85 @@ public class LabelService implements LabelInterface{
 		Response response = ResponseStatus.statusInformation(environment.getProperty("status.label.addnote"),100);
 		return response;
 	}
-
+	
+	/**
+	 * Purpose :API For Retrieve Label of Note
+	 */
+	
 	@Override
-	public List<Label> showLabel(String token, String labelId) {
+	public List<LabelDTO> getLabelsOfNote(String token, String noteId) throws UserServiceException {
+		String userId= TokenUtil.decodetoken(token);
+		Optional<User> user = userrepository.findById(userId);
+		if(user == null) {
+			throw new UserServiceException(-6,"User dose not exist ");
+		}
+		Optional<Note> note = noterepository.findById(noteId);
+		if(!note.isPresent()) {
+			throw new UserServiceException(-6,"Note Dose Not exist ");
+		}
+		List<Label> label = note.get().getListLabel();
+		List<LabelDTO> listlabel = new ArrayList<>();
+		for(Label noteLabel: label) {
+			LabelDTO labeldto= mapper.map(noteLabel,LabelDTO.class);
+			listlabel.add(labeldto);
 		
-		return null;
+		}
+		return listlabel;
 	}
 
-	public List<Label> getAll()
+	/**
+	 * Purpose : API for Note Of Label
+	 */
+	
+	@Override
+	public List<NoteDTO> getNotesOfLabel(String token, String labelId) throws UserServiceException {
+	
+		String userId =TokenUtil.decodetoken(token);
+		Optional<User> user = userrepository.findById(userId);
+		if(!user.isPresent()) {
+			throw new UserServiceException(-6,"Invalid User");
+		}
+		
+		Label label = labelrepository.findByLabelIdAndUserId(labelId, userId);
+		if(label == null) {
+			throw new UserServiceException(-6,"Invalid Label");
+		}
+		List<Note> notes = label.getNotes();
+		List<NoteDTO> noteList = new ArrayList<>();
+		for(Note note : notes) {
+			NoteDTO noteDto= mapper.map(note, NoteDTO.class);
+			noteList.add(noteDto);
+		}
+		return noteList;
+	}
+	
+	/**
+	 * Purpose : Retrive All LAbel From User
+	 */
+	@Override
+	public List<Label> getAllLabelFromUser(String token) throws UserServiceException {
+		
+		String userId = TokenUtil.decodetoken(token);
+		Optional<User> user = userrepository.findById(userId);
+		if(!user.isPresent()) {
+			throw new UserServiceException("Invalis input ");
+		}
+		List<Label> labels = labelrepository.findByUserId(userId);
+		List<Label> listLabel =  new ArrayList<>();
+		for(Label noteLabel:labels) {
+			Label labelDto = mapper.map(noteLabel, Label.class);
+			listLabel.add(labelDto);
+		}
+			return listLabel;
+	}
+	
+	/**
+	 * Purpose :API For Retrieve All Label
+	 * @return
+	 */
+	
+	public List<Label> getAllLabel()
 	{
 		return labelrepository.findAll();
 	}
-
 }

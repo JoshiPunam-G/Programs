@@ -5,6 +5,7 @@ import java.util.List;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
 import com.bridgelabz.fundoo.label.model.Label;
+import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.response.Response;
 
 public interface LabelInterface {
@@ -14,7 +15,11 @@ public interface LabelInterface {
 
 	Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException;
 
-	List<Label> showLabel(String token,String labelId) throws UserServiceException;
-
 	Response updateLabel(LabelDTO labeldto, String token,String labelId) throws UserServiceException;
+	
+	public List<LabelDTO> getLabelsOfNote(String token, String noteId) throws UserServiceException ;
+	
+	public List<NoteDTO> getNotesOfLabel(String token, String labelId) throws UserServiceException;
+	
+	public List<Label> getAllLabelFromUser(String token) throws UserServiceException;
 }
