@@ -6,6 +6,8 @@
  */
 package com.bridgelabz.fundoo.notes.controller;
 import java.util.List;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.notes.model.Note;
@@ -26,6 +30,8 @@ import com.bridgelabz.fundoo.response.Response;
 @RequestMapping("/note")
 @RestController
 public class NoteController {
+	
+	private Logger logger=GlobalResource.getLogger(NoteService.class);
 	@Autowired
 	private NoteService noteservice;
 	/**
@@ -37,6 +43,8 @@ public class NoteController {
 	 */
 	@PostMapping("/createnote")
 	public  ResponseEntity<Response> createNote(@RequestBody NoteDTO notedto, @RequestHeader String token) throws UserServiceException {
+		String methodName="createNote()";
+		logger.info(methodName + "createNote API Called");		
 		Response response=noteservice.createNote(notedto, token);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
@@ -51,7 +59,8 @@ public class NoteController {
 	@PutMapping("/updatenote")
 	public ResponseEntity<Response> update(@RequestBody NoteDTO notedto,@RequestParam String noteId) throws UserServiceException
 	{
-		System.out.println("In controller of update");
+		String methodName="update()";
+		logger.info(methodName + "update API Called");
 		Response response=noteservice.update(notedto, noteId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -67,6 +76,8 @@ public class NoteController {
 	@PutMapping("/archieve")
 	public ResponseEntity<Response> setArchieveUnarchieve(@RequestParam String noteId,@RequestHeader String token) throws UserServiceException
 	{
+		String methodName="setArchieveUnarchieve()";
+		logger.info(methodName + "setArchieveUnarchieve API Called");
 		Response response=noteservice.setArchieveUnarchieve(noteId, token);
 	    return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
@@ -81,6 +92,8 @@ public class NoteController {
 	@PutMapping("/pin")
 	public ResponseEntity<Response> setPinUnpin( @RequestParam String noteId, @RequestHeader String token) throws UserServiceException
 	{
+		String methodName="setPinUnpin()";
+		logger.info(methodName + "setPinUnpin API Called");
 		Response response=noteservice.setPinUnpin(noteId, token);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -95,6 +108,8 @@ public class NoteController {
 	
 	@PostMapping("/trash")
 	public ResponseEntity<Response> setTrashUntrash(@RequestParam String noteId,  @RequestHeader String token) throws UserServiceException {
+		String methodName="setTrashUntrash()";
+		logger.info(methodName + "setTrashUntrash API Called");
 		Response response=noteservice.setTrashUntrash(noteId, token);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -108,7 +123,37 @@ public class NoteController {
 	 @DeleteMapping("/deleteTrash")
 	 public ResponseEntity<Response> deleteinTrash( @RequestParam String noteId,  @RequestHeader String token) throws UserServiceException
 	 {
+		 String methodName="deleteinTrash()";
+			logger.info(methodName + "deleteinTrash API Called");
 		 Response response=noteservice.deleteinTrash(noteId, token);
+		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	 }
+	 
+	 /**
+	  * Purpose : API for Retrieve Note
+	  * @param token
+	  * @param noteId
+	  * @return
+	  */
+	 @GetMapping("/retrieveNote")
+	 public ResponseEntity<Response> retrieveNote(@RequestHeader String token, @RequestParam String noteId)
+	 {
+		 String methodName="retrieveNote()";
+			logger.info(methodName + "retrieveNote API Called");
+		 Response response=noteservice.retrieveNote(token, noteId);
+		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	 }
+	 /**
+	  * Purpose : API for delete note by noteid.
+	  * @param token
+	  * @param noteId
+	  * @return
+	  */
+	 @DeleteMapping("/deleteNote")
+	 public ResponseEntity<Response> deleteNote(String token, String noteId) {
+		 String methodName="deleteNote()";
+		logger.info(methodName + "deleteNote API Called");	 
+		 Response response=noteservice.deleteNote(token, noteId);
 		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	 }
 	 
@@ -119,6 +164,9 @@ public class NoteController {
 	
 	@GetMapping("/getAllNote")
 	public List<Note> getAllNote() {
+		String methodName="getAllNote()";
+		logger.info(methodName + "getAllNote Method Called");
+		
 		return noteservice.getAllNote();
 	}
 	

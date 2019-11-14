@@ -12,11 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
@@ -26,6 +28,7 @@ import com.bridgelabz.fundoo.model.User;
 import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.notes.model.Note;
 import com.bridgelabz.fundoo.notes.repository.NoteRepository;
+import com.bridgelabz.fundoo.notes.service.NoteService;
 import com.bridgelabz.fundoo.repository.UserRepository;
 import com.bridgelabz.fundoo.response.Response;
 import com.bridgelabz.fundoo.response.ResponseStatus;
@@ -33,6 +36,7 @@ import com.bridgelabz.fundoo.response.ResponseStatus;
 @Service
 @PropertySource("user.properties")
 public class LabelService implements LabelInterface{
+	private Logger logger=GlobalResource.getLogger(NoteService.class);
 	
 	@Autowired
 	private LabelRepository labelrepository;
@@ -57,6 +61,8 @@ public class LabelService implements LabelInterface{
     */
 	@Override
 	public Response createLabel(LabelDTO labeldto, String Token) throws UserServiceException {
+		String methodName="createLabel()";
+		logger.info(methodName + "createLabel API Called");		
 		String userId=TokenUtil.decodetoken(Token);
 		Optional<User> user=userrepository.findById(userId);
 		System.out.println(user);
@@ -86,6 +92,8 @@ public class LabelService implements LabelInterface{
 
 	@Override
 	public Response updateLabel(LabelDTO labeldto, String token, String labelId) throws UserServiceException {
+		String methodName="updateLabel()";
+		logger.info(methodName + "updateLabel API Called");		
 		String userId=TokenUtil.decodetoken(token);
 		System.out.println(userId);
 		Optional<User> user=userrepository.findById(userId);
@@ -113,6 +121,8 @@ public class LabelService implements LabelInterface{
 	 */
 	@Override
 	public Response deleteLabel(String token, String labelId) throws UserServiceException {
+		String methodName="deleteLabel()";
+		logger.info(methodName + "deleteLabel API Called");	
 		String userId=TokenUtil.decodetoken(token);
 		Optional<User> user=userrepository.findById(userId);
 		if(!user.isPresent())
@@ -137,6 +147,8 @@ public class LabelService implements LabelInterface{
 	 */
 	@Override
 	public Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException {
+		String methodName="addlabeltoNote()";
+		logger.info(methodName + "addlabeltoNote API Called");	
 		String userId = TokenUtil.decodetoken(token);
 		Note note = noterepository.findByUserIdAndNoteId(userId, noteId);
 		System.out.println(note);
@@ -166,7 +178,10 @@ public class LabelService implements LabelInterface{
 	 */
 	
 	@Override
-	public List<LabelDTO> getLabelsOfNote(String token, String noteId) throws UserServiceException {
+	public Response getLabelsOfNote(String token, String noteId) throws UserServiceException {
+		Response response = null;
+		String methodName="getLabelsOfNote()";
+		logger.info(methodName + "getLabelsOfNote API Called");	
 		String userId= TokenUtil.decodetoken(token);
 		Optional<User> user = userrepository.findById(userId);
 		if(user == null) {
@@ -182,7 +197,7 @@ public class LabelService implements LabelInterface{
 			LabelDTO labeldto= mapper.map(noteLabel,LabelDTO.class);
 			listlabel.add(labeldto);
 		}
-		return listlabel;
+		return  response;
 	}
 
 	/**
@@ -193,8 +208,10 @@ public class LabelService implements LabelInterface{
 	 */
 	
 	@Override
-	public List<NoteDTO> getNotesOfLabel(String token, String labelId) throws UserServiceException {
-	
+	public Response getNotesOfLabel(String token, String labelId) throws UserServiceException {
+		Response response = null;
+		String methodName="getNotesOfLabel()";
+		logger.info(methodName + "getNotesOfLabel API Called");	
 		String userId =TokenUtil.decodetoken(token);
 		Optional<User> user = userrepository.findById(userId);
 		if(!user.isPresent()) {
@@ -210,7 +227,7 @@ public class LabelService implements LabelInterface{
 			NoteDTO noteDto= mapper.map(note, NoteDTO.class);
 			noteList.add(noteDto);
 		}
-		return noteList;
+		return response;
 	}
 	
 	/**
@@ -219,8 +236,10 @@ public class LabelService implements LabelInterface{
 	 * @throws UserServiceException
 	 */
 	@Override
-	public List<Label> getAllLabelFromUser(String token) throws UserServiceException {
-		
+	public Response getAllLabelFromUser(String token) throws UserServiceException {
+		Response response=null;
+		String methodName="getAllLabelFromUser()";
+		logger.info(methodName + "getAllLabelFromUser API Called");	
 		String userId = TokenUtil.decodetoken(token);
 		Optional<User> user = userrepository.findById(userId);
 		if(!user.isPresent()) {
@@ -232,7 +251,7 @@ public class LabelService implements LabelInterface{
 			Label labelDto = mapper.map(noteLabel, Label.class);
 			listLabel.add(labelDto);
 		}
-			return listLabel;
+			return response;
 	}
 	
 	/**
@@ -242,6 +261,8 @@ public class LabelService implements LabelInterface{
 	
 	public List<Label> getAllLabel()
 	{
+		String methodName="getAllLabel()";
+		logger.info(methodName + "getAllLabel API Called");	
 		return labelrepository.findAll();
 	}
 	
@@ -250,6 +271,8 @@ public class LabelService implements LabelInterface{
 	 */
 	public void deleteAllLabel()
 	{
+		String methodName="deleteAllLabel()";
+		logger.info(methodName + "deleteAllLabel API Called");	
 	   labelrepository.deleteAll();
 	}
 	

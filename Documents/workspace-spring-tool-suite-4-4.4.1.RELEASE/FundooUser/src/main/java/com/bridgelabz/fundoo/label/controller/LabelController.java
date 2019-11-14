@@ -9,6 +9,8 @@
 
 package com.bridgelabz.fundoo.label.controller;
 import java.util.List;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +23,20 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
 import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.label.service.LabelService;
+import com.bridgelabz.fundoo.notes.service.NoteService;
 import com.bridgelabz.fundoo.response.Response;
 
 @RequestMapping("/label")
 @RestController
 public class LabelController {
+	
+	private Logger logger=GlobalResource.getLogger(NoteService.class);
 	
 	@Autowired
 	private LabelService labelservice;
@@ -43,6 +50,8 @@ public class LabelController {
 	@PostMapping("/createlabel")
 	public ResponseEntity<Response> createLabel(@RequestBody LabelDTO labeldto,@RequestHeader String Token) throws UserServiceException
 	{
+		String methodName="createLabel()";
+		logger.info(methodName + "createLabel API Called");		
 		Response response=labelservice.createLabel(labeldto, Token);
 	    return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -58,6 +67,8 @@ public class LabelController {
 	@PostMapping("/updatelabel")
 	public ResponseEntity<Response> updateLabel(@RequestBody LabelDTO labeldto,@RequestHeader String token,@RequestParam String labelId) throws UserServiceException
 	{
+		String methodName="updateLabel()";
+		logger.info(methodName + "updateLabel API Called");		
 		Response response=labelservice.updateLabel(labeldto, token, labelId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -71,6 +82,8 @@ public class LabelController {
 	 */
 	@DeleteMapping("/deletelabel")
 	public ResponseEntity<Response> deleteLabel(@RequestHeader String token,@RequestParam String labelId) throws UserServiceException {
+		String methodName="deleteLabel()";
+		logger.info(methodName + "deleteLabel API Called");	
 		Response response=labelservice.deleteLabel(token, labelId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -86,10 +99,46 @@ public class LabelController {
 	@PutMapping("/addlabel")
 	public ResponseEntity<Response> addlabeltoNote(@RequestParam String labelId,@RequestHeader String token,@RequestParam String noteId) throws UserServiceException 
 	{
-		System.out.println("--");
+		String methodName="addlabeltoNote()";
+		logger.info(methodName + "addlabeltoNote API Called");	
 		Response response=labelservice.addlabeltoNote(labelId, token, noteId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
+	/**
+	 * Purpose :Retrieve Label of Note
+	 * @param token
+	 * @param noteId
+	 * @return
+	 * @throws UserServiceException
+	 */
+	
+	@GetMapping("/getLabelsOfNote")
+	public ResponseEntity<Response> getLabelsOfNote(String token, String noteId) throws UserServiceException 
+	{
+		String methodName="getLabelsOfNote()";
+		logger.info(methodName + "getLabelsOfNote API Called");	
+		Response response=labelservice.getLabelsOfNote(token, noteId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);	
+	}
+	
+	/**
+	 * Purpose : Retrieve Note of Label
+	 * @param token
+	 * @param labelId
+	 * @return
+	 * @throws UserServiceException
+	 */
+	
+	@GetMapping("/getNotesOfLabel")
+	public ResponseEntity<Response> getNotesOfLabel(String token, String labelId) throws UserServiceException 
+	{
+		String methodName="getNotesOfLabel()";
+		logger.info(methodName + "getNotesOfLabel API Called");	
+		Response response=labelservice.getNotesOfLabel(token, labelId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	}
+
+	
 	/**
 	 * Purpose : Retrieve All Label
 	 * @param token
@@ -98,9 +147,12 @@ public class LabelController {
 	 */
 	
 	@GetMapping("/getLabel")
-	public List<Label> getAllLabelFromUser(@RequestHeader String token) throws UserServiceException 
+	public ResponseEntity<Response> getAllLabelFromUser(@RequestHeader String token) throws UserServiceException 
 	{
-		return labelservice.getAllLabelFromUser(token);
+		String methodName="getAllLabelFromUser()";
+		logger.info(methodName + "getAllLabelFromUser API Called");	
+		Response response=labelservice.getAllLabelFromUser(token);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
 	/**
@@ -110,12 +162,20 @@ public class LabelController {
 	@GetMapping("/getAllLabel")
 	public List<Label> getAllLabel()
 	{
+		String methodName="getAllLabel()";
+		logger.info(methodName + "getAllLabel API Called");
 		return labelservice.getAllLabel();
 	}
 	
+	/**
+	 * Purpose :Delete All Label
+	 * @return
+	 */
 	@DeleteMapping("/deleteAllLabel")
 	public String deleteAllLabel()
 	{
+		String methodName="deleteAllLabel()";
+		logger.info(methodName + "deleteAllLabel API Called");	
 		labelservice.deleteAllLabel();
 		return "All Label Deleted";
 	}

@@ -17,9 +17,9 @@ public interface LabelInterface {
 
 	Response updateLabel(LabelDTO labeldto, String token,String labelId) throws UserServiceException;
 	
-	public List<LabelDTO> getLabelsOfNote(String token, String noteId) throws UserServiceException ;
+	public Response getLabelsOfNote(String token, String noteId) throws UserServiceException ;
 	
-	public List<NoteDTO> getNotesOfLabel(String token, String labelId) throws UserServiceException;
+	public Response getNotesOfLabel(String token, String labelId) throws UserServiceException;
 	
-	public List<Label> getAllLabelFromUser(String token) throws UserServiceException;
+	public Response getAllLabelFromUser(String token) throws UserServiceException;
 }

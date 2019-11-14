@@ -10,10 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.model.User;
@@ -27,6 +30,8 @@ import com.bridgelabz.fundoo.response.ResponseStatus;
 @Service
 @PropertySource("user.properties")
 public class NoteService implements NoteInterface {
+	
+	private Logger logger=GlobalResource.getLogger(NoteService.class);
 
 	@Autowired
 	private NoteRepository noterepository;
@@ -50,7 +55,9 @@ public class NoteService implements NoteInterface {
 
 	@Override
 	public Response createNote(NoteDTO notedto, String token) throws UserServiceException {
-		System.out.println("note");
+		String methodName="createNote()";
+		logger.info(methodName + "createNote Method Called");
+		
 		String tokenNote = TokenUtil.decodetoken(token);
 		if (notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty()) {
 			throw new UserServiceException(10, "Title and description are empty", tokenNote);
@@ -71,7 +78,9 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response update(NoteDTO notedto, String noteId) throws UserServiceException {
-		System.out.println("In Update Note");
+		String methodName="update()";
+		logger.info(methodName + "update Method Called");
+		
 		Note note = noterepository.findByNoteId(noteId);
 		if(notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty())
 		{
@@ -95,7 +104,9 @@ public class NoteService implements NoteInterface {
 
 	@Override
 	public Response setArchieveUnarchieve(String noteId, String token) throws UserServiceException {
-		System.out.println("Archieve Token");
+		String methodName="setArchieveUnarchieve()";
+		logger.info(methodName + "setArchieveUnarchieve Method Called");
+		
 		String tokenNote=TokenUtil.decodetoken(token);
 		Note note=noterepository.findByNoteId(noteId,tokenNote);
 		System.out.println(note);
@@ -127,6 +138,8 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response setPinUnpin(String noteId, String token) throws UserServiceException {
+		String methodName="setPinUnpin()";
+		logger.info(methodName + "setPinUnpin Method Called");
 		String tokenNote=TokenUtil.decodetoken(token);
 		Note note=noterepository.findByNoteId(noteId,tokenNote);
 		if(note==null)
@@ -156,6 +169,9 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response setTrashUntrash(String noteId, String token) throws UserServiceException {
+		String methodName="setTrashUntrash()";
+		logger.info(methodName + "setTrashUntrash Method Called");
+		
 	   String tokenNote=TokenUtil.decodetoken(token);
 	   Note note=noterepository.findByNoteId(noteId,tokenNote);
 	   System.out.println(note);
@@ -184,6 +200,9 @@ public class NoteService implements NoteInterface {
  */
 	@Override
 	public Response deleteinTrash(String noteId, String token) {
+		String methodName="deleteinTrash()";
+		logger.info(methodName + "deleteinTrash Method Called");
+		
 		String tokenNote = TokenUtil.decodetoken(token);
 		Optional<User> user=repository.findById(tokenNote);
 		Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
@@ -208,6 +227,8 @@ public class NoteService implements NoteInterface {
 
 @Override
 public Response retrieveNote(String token, String noteId) {
+	String methodName="retrieveNote()";
+	logger.info(methodName + "retrieveNote Method Called");
 	String tokenNote=TokenUtil.decodetoken(token);
 	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
 	String title=note.getTitle();
@@ -225,6 +246,8 @@ public Response retrieveNote(String token, String noteId) {
 
 @Override
 public Response deleteNote(String token, String noteId) {
+	String methodName="deleteNote()";
+	logger.info(methodName + "deleteNote Method Called");
 	String tokenNote=TokenUtil.decodetoken(token);
 	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
 	if(note.isTrash()==false)
@@ -256,11 +279,16 @@ public Response responseMessage(String statusmessage,int statuscode)
 */
 @Override
 public List<Note> getAllNote() {
+	
+	String methodName="getAllNote()";
+	logger.info(methodName + "getAllNote Method Called");
 		return noterepository.findAll();
    }
 
 public void DeleteAllNote()
 {
+	String methodName="DeleteAllNote()";
+	logger.info(methodName + "DeleteAllNote Method Called");
 	 noterepository.deleteAll();
 }
 
