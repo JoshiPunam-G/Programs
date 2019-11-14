@@ -12,6 +12,7 @@ import com.bridgelabz.fundoo.notes.model.Note;
 
 @Document
 public class Label {
+	
 	@Id
 	private String labelId;
 	private String labelName;
@@ -71,16 +72,7 @@ public class Label {
 		
 	}
 	
-	private List<Note> notelist = new ArrayList<Note>();
-	private List<Label> labellist;
-	public List<Label> getLabel() {
-		
-		return labellist;
-	}
 	public List<Note> getNotes() {
-		return notelist;
+		return null;
 	}
-	
-
-
 }

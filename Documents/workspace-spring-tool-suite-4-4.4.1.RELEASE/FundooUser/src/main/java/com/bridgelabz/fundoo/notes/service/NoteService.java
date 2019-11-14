@@ -4,13 +4,11 @@
  * @version 1.0
  * @since   11-11-2019  
  */
-
-
 package com.bridgelabz.fundoo.notes.service;
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -34,7 +32,7 @@ public class NoteService implements NoteInterface {
 	private NoteRepository noterepository;
 	
 	@Autowired
-	private UserRepository repository;
+    private UserRepository repository;
 
 	@Autowired
 	private Environment environment;
@@ -42,33 +40,34 @@ public class NoteService implements NoteInterface {
 	@Autowired
 	private ModelMapper mapper;
 
-	//private Response response;
-
 	/**
 	 * Purpose :API for Create Note
 	 * 
+	 * @param NoteDTO 
+	 * @param token
 	 * @throws UserServiceException
 	 */
 
 	@Override
 	public Response createNote(NoteDTO notedto, String token) throws UserServiceException {
+		System.out.println("note");
 		String tokenNote = TokenUtil.decodetoken(token);
 		if (notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty()) {
 			throw new UserServiceException(10, "Title and description are empty", tokenNote);
 		} 
 		 Note note=mapper.map(notedto, Note.class);
-  		 Optional<User> user=repository.findById(tokenNote);
 		 note.setUserId(tokenNote);
 		 note.setCreateDate(LocalDateTime.now());
 		 note.setModified(LocalDateTime.now());
 		 noterepository.save(note);
-		 
-		 Response response = ResponseStatus.statusInformation(environment.getProperty("status.success.createnote"),100);
-			return response;
+		 return responseMessage(environment.getProperty("status.success.createnote"), 100);
 	}
 
 	/**
 	 * Purpose :API For Update Note
+	 * @param  NoteDTO
+	 * @param noteId
+	 * @throws UserServiceException
 	 */
 	@Override
 	public Response update(NoteDTO notedto, String noteId) throws UserServiceException {
@@ -82,13 +81,16 @@ public class NoteService implements NoteInterface {
 		note.setDescription(notedto.getDescription());
 		note.setModified(LocalDateTime.now());
 		noterepository.save(note);
-		Response response = ResponseStatus.statusInformation(environment.getProperty("status.notes.updatedSuccessfull"),200);
-		return response;
+		return responseMessage(environment.getProperty("status.notes.updatedSuccessfull"),200);
+		
 	}
 
 	
 	/**
 	 * Purpose :API for ArchieveAndUnArchieve note
+	 * @param noteId
+	 * @param token
+	 * @throws UserServiceException
 	 */
 
 	@Override
@@ -105,21 +107,22 @@ public class NoteService implements NoteInterface {
 			{
 				note.setStatusArchieve(true);
 				noterepository.save(note);
-			    Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.archieve"),200);
-				return response;
+				return responseMessage(environment.getProperty("status.note.archieve"),200);
+				 
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				 Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.unarchieve"),200);
-					return response;
+				 return responseMessage(environment.getProperty("status.note.unarchieve"),200);	
 			}
 		}
 	
 	
 	/**
 	 * Purpose :API For SetPinUnpin Note
+	 * @param noteID 
+	 * @param token
 	 * @throws UserServiceException 
 	 */
 	@Override
@@ -135,23 +138,22 @@ public class NoteService implements NoteInterface {
 			{
 				note.setStatusPinUnpin(true);
 				noterepository.save(note);
-				Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.pin"),200);
-				return response;
+				return responseMessage(environment.getProperty("status.note.pin"),200);
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				Response response = ResponseStatus.statusInformation(environment.getProperty("status.note.unpin"),200);
-				return response;
+				return responseMessage(environment.getProperty("status.note.unpin"),200);
 			}
 	}
-	
+
 	/**
 	 * Purpose :API For TrashUntrash
+	 * @param noteID
+	 * @param token
 	 * @throws UserServiceException 
 	 */
-
 	@Override
 	public Response setTrashUntrash(String noteId, String token) throws UserServiceException {
 	   String tokenNote=TokenUtil.decodetoken(token);
@@ -165,57 +167,101 @@ public class NoteService implements NoteInterface {
 		{
 			note.setStatusTrashUntrash(true);
 			noterepository.save(note);
-			Response response = ResponseStatus.statusInformation(environment.getProperty("note.trash"),200);
-			return response;
+			return responseMessage(environment.getProperty("note.trash"),200);
 		}
 		else
 		{
 			note.setStatusArchieve(false);
 			noterepository.save(note);
-			Response response = ResponseStatus.statusInformation(environment.getProperty("note.untrash"),200);
-			return response;
+			return responseMessage(environment.getProperty("note.untrash"),200);
 		}
 	}
 
 /**
  * Purpose :API For DeleteTrash
+ * @param noteID
+ * @param token
  */
-	
 	@Override
 	public Response deleteinTrash(String noteId, String token) {
 		String tokenNote = TokenUtil.decodetoken(token);
-		Optional<Note> note = noterepository.findById(noteId);
-		System.out.println(note);
-		if (tokenNote.equals(note.get().getNoteId())) {
-			if (note.isPresent()) {
-				if (note.get().isStatusTrashUntrash() == true) {
-					noterepository.deleteByNoteId(noteId);
-					Response response = ResponseStatus.statusInformation(environment.getProperty("note.delete"),200);
-					return response;
-				} else {
-					noterepository.save(note.get());
-					Response response = ResponseStatus.statusInformation(environment.getProperty("notNot.deleted"),200);
-					return response;
-				}
-			} else {
-				Response response = ResponseStatus.statusInformation(environment.getProperty("note.NotPresent"),200);
-				return response;
-			}
-
-		} else {	
-			Response response = ResponseStatus.statusInformation(environment.getProperty("note.invalid"),200);
-			return response;
+		Optional<User> user=repository.findById(tokenNote);
+		Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
+		if(note.isTrash()==true)
+		{
+		   note.setStatusTrashUntrash(false);
+		   repository.save(user.get());
+		   noterepository.delete(note);
+		   return responseMessage(environment.getProperty("status.success.deleteTrash"), 200);
+		}
+		else
+		{
+			return responseMessage(environment.getProperty("status.success.deleteTrash"), 200);
 		}
 	}
-	 
+	
 /**
- * Purpose : Retrieve All Note
+ * Purpose : Retrieve Note By NoteId
+ * @param token
+ * @param noteId
  */
 
 @Override
+public Response retrieveNote(String token, String noteId) {
+	String tokenNote=TokenUtil.decodetoken(token);
+	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
+	String title=note.getTitle();
+	System.out.println(title);
+	String description=note.getDescription();
+	System.out.println(description);
+	return responseMessage(environment.getProperty("status.findnotebyid.success"), 100);
+}
+
+/**
+ * Purpose :Delete Note By NoteID
+ * @param token
+ * @param noteId
+ */
+
+@Override
+public Response deleteNote(String token, String noteId) {
+	String tokenNote=TokenUtil.decodetoken(token);
+	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
+	if(note.isTrash()==false)
+	{
+		note.setStatusTrashUntrash(true);
+		note.setModified(LocalDateTime.now());
+		noterepository.save(note);
+		return responseMessage(environment.getProperty("status.deletenotebyid.success"), 100);	
+	}
+	return responseMessage(environment.getProperty("status.deletenote.fail"), 200);
+}
+
+/**
+ * Purpose : Implementation for sending response message
+ * @param statusmessage
+ * @param statuscode
+ * @return
+ */
+public Response responseMessage(String statusmessage,int statuscode)
+{
+	Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
+	response.getStatusMessage();
+	return response;
+}
+
+
+/**
+* Purpose : Retrieve All Note
+*/
+@Override
 public List<Note> getAllNote() {
 		return noterepository.findAll();
-    }
+   }
 
+public void DeleteAllNote()
+{
+	 noterepository.deleteAll();
+}
 
 }

@@ -1,6 +1,7 @@
 
 /**
  * Purpose : Implementation of Controller for Accessing Services implemented in service class .
+
  * Author  : Punam Joshi 
  * @version 1.0
  * @since   12-11-2019  
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
@@ -24,6 +27,7 @@ import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.label.service.LabelService;
 import com.bridgelabz.fundoo.response.Response;
 
+@RequestMapping("/label")
 @RestController
 public class LabelController {
 	
@@ -42,7 +46,6 @@ public class LabelController {
 		Response response=labelservice.createLabel(labeldto, Token);
 	    return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
-	
 	/**
 	 * Purpose :update label
 	 * @param labeldto
@@ -53,7 +56,7 @@ public class LabelController {
 	 */
 	
 	@PostMapping("/updatelabel")
-	public ResponseEntity<Response> updateLabel(@RequestBody LabelDTO labeldto,@RequestHeader String token,@RequestHeader String labelId) throws UserServiceException
+	public ResponseEntity<Response> updateLabel(@RequestBody LabelDTO labeldto,@RequestHeader String token,@RequestParam String labelId) throws UserServiceException
 	{
 		Response response=labelservice.updateLabel(labeldto, token, labelId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
@@ -67,7 +70,7 @@ public class LabelController {
 	 * @throws UserServiceException
 	 */
 	@DeleteMapping("/deletelabel")
-	public ResponseEntity<Response> deleteLabel(@RequestHeader String token,@RequestHeader String labelId) throws UserServiceException {
+	public ResponseEntity<Response> deleteLabel(@RequestHeader String token,@RequestParam String labelId) throws UserServiceException {
 		Response response=labelservice.deleteLabel(token, labelId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -81,12 +84,12 @@ public class LabelController {
 	 * @throws UserServiceException
 	 */
 	@PutMapping("/addlabel")
-	public ResponseEntity<Response> addlabeltoNote(@RequestHeader String labelId,@RequestHeader String token,@RequestHeader String noteId) throws UserServiceException 
+	public ResponseEntity<Response> addlabeltoNote(@RequestParam String labelId,@RequestHeader String token,@RequestParam String noteId) throws UserServiceException 
 	{
+		System.out.println("--");
 		Response response=labelservice.addlabeltoNote(labelId, token, noteId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
-	
 	/**
 	 * Purpose : Retrieve All Label
 	 * @param token
@@ -104,11 +107,17 @@ public class LabelController {
 	 * Purpose :Retrieve All Label
 	 * @return
 	 */
-	
 	@GetMapping("/getAllLabel")
 	public List<Label> getAllLabel()
 	{
 		return labelservice.getAllLabel();
+	}
+	
+	@DeleteMapping("/deleteAllLabel")
+	public String deleteAllLabel()
+	{
+		labelservice.deleteAllLabel();
+		return "All Label Deleted";
 	}
 
 }

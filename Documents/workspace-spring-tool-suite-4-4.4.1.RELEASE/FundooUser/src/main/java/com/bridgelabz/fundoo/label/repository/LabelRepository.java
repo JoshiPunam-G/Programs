@@ -11,10 +11,12 @@ import com.bridgelabz.fundoo.label.model.Label;
 @Repository
 public interface LabelRepository extends MongoRepository<Label, String>{
 	
-	public Label findByLabelIdAndUserId(String LabelId,String userId);
+	public Label findByLabelIdAndUserId(String labelId,String userId);
 	
 	public Optional<Label> findByUserIdAndLabelName(String userId,String labelName);
 	
 	public List<Label> findByUserId(String UserId);
-
+	
+	public List<Label> findByLabelId(String labelId);
+ 
 }

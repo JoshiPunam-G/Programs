@@ -8,16 +8,10 @@
  */
 
 package com.bridgelabz.fundoo.model;
-
 import java.util.List;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import com.bridgelabz.fundoo.label.model.Label;
 
 @Document
@@ -55,9 +49,7 @@ public class User {
 	}
 
 	public User() {
-	
 	}
-
 	//getter and setter method 
 	public String getUsername() {
 		return username;
@@ -81,7 +73,6 @@ public class User {
 	public boolean isPresent() {
 		return false;
 	}
-	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", note="
@@ -93,6 +84,4 @@ public class User {
 		
 		return null;
 	}
-	
-
 }

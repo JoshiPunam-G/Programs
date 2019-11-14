@@ -102,7 +102,8 @@ public class UserService implements UserInterface {
 			throw new NotFoundException(environment.getProperty("Exception.message.notfound"));
 		}
 		else
-		{			
+		{		
+			
 		    User user1=mapper.map(userdto, User.class);
 		    user1.setPassword(encoder.encode(user1.getPassword()));
 		    repository.save(user1);

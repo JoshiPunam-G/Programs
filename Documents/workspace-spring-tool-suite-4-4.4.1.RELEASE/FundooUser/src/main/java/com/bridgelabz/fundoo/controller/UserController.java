@@ -21,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fundoo.exception.RecordNotFoundException;
 import com.bridgelabz.fundoo.exception.UserServiceException;
-import com.bridgelabz.fundoo.model.EmailModel;
 import com.bridgelabz.fundoo.model.User;
 import com.bridgelabz.fundoo.response.Response;
-import com.bridgelabz.fundoo.service.EmailService;
 import com.bridgelabz.fundoo.service.UserService;
 import com.bridgelabz.fundoo.user.dto.PasswordDTO;
 import com.bridgelabz.fundoo.user.dto.RegisterDTO;
@@ -34,10 +32,10 @@ public class UserController {
 
 	@Autowired
 	public UserService userservice;
-
-	@Autowired
-	private EmailService mailservice;
-	
+//
+//	@Autowired
+//	private EmailService mailservice;
+//	
 	/**
 	 * Purpose :Implementation for User Login
 	 * @throws Exception 

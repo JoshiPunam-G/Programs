@@ -13,4 +13,9 @@ public interface NoteInterface {
 	 public Response setPinUnpin(String noteId, String token) throws UserServiceException;
 	 public Response setTrashUntrash(String noteId, String token) throws UserServiceException;
 	 public Response deleteinTrash(String noteId, String token) throws UserServiceException;
+	 public Response retrieveNote(String token, String noteId);
+	 public Response deleteNote(String token, String noteId);
+	 
+	 
+	
 }

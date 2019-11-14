@@ -4,8 +4,6 @@
  * @version 1.0
  * @since   12-11-2019  
  */
-
-
 package com.bridgelabz.fundoo.label.service;
 
 import java.time.LocalDateTime;
@@ -35,7 +33,7 @@ import com.bridgelabz.fundoo.response.ResponseStatus;
 @Service
 @PropertySource("user.properties")
 public class LabelService implements LabelInterface{
-
+	
 	@Autowired
 	private LabelRepository labelrepository;
 	
@@ -50,10 +48,12 @@ public class LabelService implements LabelInterface{
 	
 	@Autowired
 	private ModelMapper mapper;
-	
-	
+		
    /**
     * Purpose:API for create label
+    * @param labeldto
+    * @param Token
+    * @throws UserServiceException
     */
 	@Override
 	public Response createLabel(LabelDTO labeldto, String Token) throws UserServiceException {
@@ -67,18 +67,21 @@ public class LabelService implements LabelInterface{
 		if(labelPresent.isPresent()) {
 			throw new UserServiceException(101,"User laready Exist");
 		}
-	//	User setuser=new User();
 		Label label = mapper.map(labeldto,Label.class);
+		label.setUserId(user.get().getId());
 		label.setLabelName(labeldto.getLabelName());
 	    label.setLabelCreateDate(LocalDateTime.now());
 		label.setModified(LocalDateTime.now());
 		labelrepository.save(label);
-		Response response = ResponseStatus.statusInformation(environment.getProperty("status.success.createlabel"),100);
-			return response;
+		return responseMessage(environment.getProperty("status.success.createlabel"),100);
 	}
 	
 	/**
 	 * Purpose :API for Update Label
+	 * @param labeldto
+	 * @param token
+	 * @param labelId
+	 * @throws UserServiceException
 	 */
 
 	@Override
@@ -99,12 +102,14 @@ public class LabelService implements LabelInterface{
 	    label.setLabelCreateDate(LocalDateTime.now());
 		label.setModified(LocalDateTime.now());
 		labelrepository.save(label);
-		Response response = ResponseStatus.statusInformation(environment.getProperty("status.success.updatelabel"),100);
-			return response;
+		return responseMessage(environment.getProperty("status.success.updatelabel"),100);
 	}
 	
 	/**
 	 * Purpose :API For deleteLabel
+	 * @param token
+	 * @param labelId
+	 * @throws UserServiceException
 	 */
 	@Override
 	public Response deleteLabel(String token, String labelId) throws UserServiceException {
@@ -119,40 +124,45 @@ public class LabelService implements LabelInterface{
 		{
 			throw new UserServiceException(100,"Label Does Not Exist");
 		}
-		Response response=ResponseStatus.statusInformation(environment.getProperty("status.success.delete"), 200);
-		return response;
+		return responseMessage(environment.getProperty("status.success.delete"), 200);
 	}
 
 	
 	/**
 	 * Purpose :API for Add Label to Note
+	 * @param labelId
+	 * @param token
+	 * @param noteId
+	 * @throws UserServiceException
 	 */
 	@Override
 	public Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException {
 		String userId = TokenUtil.decodetoken(token);
-		Optional<User> user = userrepository.findById(userId);
-		if(user== null) {
-			throw new UserServiceException(-6,"Invalid Input");
-		}
 		Note note = noterepository.findByUserIdAndNoteId(userId, noteId);
-		if(note == null) {
+		System.out.println(note);
+		if(note == null) 
 			throw new UserServiceException(101,"Invalid Note");
-		}
-		Label label = labelrepository.findByLabelIdAndUserId(labelId, userId);
+		Optional<User> user = userrepository.findById(userId);
+		
+		if(!user.isPresent())
+			throw new UserServiceException("user not found");
+		List<Label> label=labelrepository.findByLabelId(labelId);
+		
+	
 		if(label == null) {
 			throw new UserServiceException(-6,"Invalid label");
 		}
-		note.getListLabel().add(label);
-		note.setModified(LocalDateTime.now());
-		label.setModified(LocalDateTime.now());
+		note.setLabellist(label);
+	    note.setModified(LocalDateTime.now());
 		noterepository.save(note);
-		labelrepository.save(label);
-		Response response = ResponseStatus.statusInformation(environment.getProperty("status.label.addnote"),100);
-		return response;
+		return responseMessage(environment.getProperty("status.label.addnote"),100);
 	}
 	
 	/**
 	 * Purpose :API For Retrieve Label of Note
+	 * @param token
+	 * @param noteId
+	 * @throws UserServiceException
 	 */
 	
 	@Override
@@ -166,18 +176,20 @@ public class LabelService implements LabelInterface{
 		if(!note.isPresent()) {
 			throw new UserServiceException(-6,"Note Dose Not exist ");
 		}
-		List<Label> label = note.get().getListLabel();
+		List<Label> label = note.get().getLabellist();
 		List<LabelDTO> listlabel = new ArrayList<>();
 		for(Label noteLabel: label) {
 			LabelDTO labeldto= mapper.map(noteLabel,LabelDTO.class);
 			listlabel.add(labeldto);
-		
 		}
 		return listlabel;
 	}
 
 	/**
-	 * Purpose : API for Note Of Label
+	 * Purpose : API for Retrieve Note Of Label
+	 * @param token
+	 * @param labelId
+	 * @throws UserServiceException
 	 */
 	
 	@Override
@@ -188,7 +200,6 @@ public class LabelService implements LabelInterface{
 		if(!user.isPresent()) {
 			throw new UserServiceException(-6,"Invalid User");
 		}
-		
 		Label label = labelrepository.findByLabelIdAndUserId(labelId, userId);
 		if(label == null) {
 			throw new UserServiceException(-6,"Invalid Label");
@@ -203,7 +214,9 @@ public class LabelService implements LabelInterface{
 	}
 	
 	/**
-	 * Purpose : Retrive All LAbel From User
+	 * Purpose : Retreive All LAbel From User
+	 * @param token
+	 * @throws UserServiceException
 	 */
 	@Override
 	public List<Label> getAllLabelFromUser(String token) throws UserServiceException {
@@ -230,5 +243,27 @@ public class LabelService implements LabelInterface{
 	public List<Label> getAllLabel()
 	{
 		return labelrepository.findAll();
+	}
+	
+	/**
+	 * Purpose :API for Delete All Label
+	 */
+	public void deleteAllLabel()
+	{
+	   labelrepository.deleteAll();
+	}
+	
+	
+	/**
+	 * Purpose : Implementation for sending response message
+	 * @param statusmessage
+	 * @param statuscode
+	 * @return
+	 */
+	public Response responseMessage(String statusmessage,int statuscode)
+	{
+		Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
+		response.getStatusMessage();
+		return response;
 	}
 }

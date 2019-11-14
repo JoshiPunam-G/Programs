@@ -16,7 +16,5 @@ public class ResponseStatus {
 		response.setStatuscode(statuscode);
 		response.setToken(token);
 		return response;
-		
 	}
-
 }

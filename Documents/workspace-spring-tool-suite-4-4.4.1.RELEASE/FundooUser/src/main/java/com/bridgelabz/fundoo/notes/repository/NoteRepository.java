@@ -12,7 +12,9 @@ public interface NoteRepository extends MongoRepository<Note, String> {
 	
 	public Note findByNoteId(String noteId) ;
 	
-	public Note findByUserIdAndNoteId(String noteId, String noteId2);
+	public Note findByUserId(String userId);
+	
+	public Note findByUserIdAndNoteId(String token, String noteId);
 	
 	public Optional<Note> findById(String noteID);
 	

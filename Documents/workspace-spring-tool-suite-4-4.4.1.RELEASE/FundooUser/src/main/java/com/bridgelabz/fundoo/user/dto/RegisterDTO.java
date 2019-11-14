@@ -44,6 +44,4 @@ public class RegisterDTO {
 	public String toString() {
 		return "RegisterDTO [username=" + username + ", password=" + password + ", email=" + email + "]";
 	}
-
-
 }

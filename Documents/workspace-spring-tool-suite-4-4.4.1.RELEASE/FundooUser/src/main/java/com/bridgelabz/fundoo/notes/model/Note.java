@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bridgelabz.fundoo.label.model.Label;
@@ -78,15 +79,22 @@ public class Note {
 				+ ", statusTrashUntrash=" + statusTrashUntrash + ", userId=" + userId + "]";
 	}
 	
-	private List<Label> labellist;
-	
 	public void setModified(LocalDateTime now) {
 		this.now=now;
 		
 	}
-	public List<Label> getListLabel() {
 	
+	public boolean isTrash() {
+	
+		return false;
+	}
+	@DBRef(lazy=true)
+	private List<Label> labellist ;
+	public List<Label> getLabellist() {
 		return labellist;
+	}
+	public void setLabellist(List<Label> labellist) {
+		this.labellist = labellist;
 	}
 	
 }
