@@ -21,10 +21,23 @@ public class Note {
 	private boolean statusTrashUntrash;
 	private String userId;
 	private LocalDateTime now;
+	private String reminder;
     
 
+//	public LocalDateTime getReminder() {
+//		return reminder;
+//	}
+//	public void setReminder(LocalDateTime reminder) {
+//		this.reminder = reminder;
+//	}
 	public String getUserId() {
 		return userId;
+	}
+	public String getReminder() {
+		return reminder;
+	}
+	public void setReminder(String reminder) {
+		this.reminder = reminder;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
@@ -72,13 +85,15 @@ public class Note {
 	public void setStatusTrashUntrash(boolean statusTrashUntrash) {
 		this.statusTrashUntrash = statusTrashUntrash;
 	}
+	
+	
 	@Override
 	public String toString() {
 		return "Note [noteId=" + noteId + ", title=" + title + ", description=" + description + ", createDate="
 				+ createDate + ", statusArchieve=" + statusArchieve + ", statusPinUnpin=" + statusPinUnpin
-				+ ", statusTrashUntrash=" + statusTrashUntrash + ", userId=" + userId + "]";
+				+ ", statusTrashUntrash=" + statusTrashUntrash + ", userId=" + userId + ", now=" + now + ", labellist="
+				+ labellist + "]";
 	}
-	
 	public void setModified(LocalDateTime now) {
 		this.now=now;
 		
@@ -88,13 +103,16 @@ public class Note {
 	
 		return false;
 	}
-	@DBRef(lazy=true)
+	//@DBRef(lazy=true)
 	private List<Label> labellist ;
 	public List<Label> getLabellist() {
 		return labellist;
 	}
 	public void setLabellist(List<Label> labellist) {
 		this.labellist = labellist;
+	}
+	public boolean isPresent() {
+		return false;
 	}
 	
 }

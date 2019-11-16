@@ -149,6 +149,7 @@ public class LabelService implements LabelInterface{
 	public Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException {
 		String methodName="addlabeltoNote()";
 		logger.info(methodName + "addlabeltoNote API Called");	
+		
 		String userId = TokenUtil.decodetoken(token);
 		Note note = noterepository.findByUserIdAndNoteId(userId, noteId);
 		System.out.println(note);
@@ -160,7 +161,6 @@ public class LabelService implements LabelInterface{
 			throw new UserServiceException("user not found");
 		List<Label> label=labelrepository.findByLabelId(labelId);
 		
-	
 		if(label == null) {
 			throw new UserServiceException(-6,"Invalid label");
 		}
@@ -169,6 +169,9 @@ public class LabelService implements LabelInterface{
 		noterepository.save(note);
 		return responseMessage(environment.getProperty("status.label.addnote"),100);
 	}
+	
+	
+
 	
 	/**
 	 * Purpose :API For Retrieve Label of Note
@@ -179,25 +182,17 @@ public class LabelService implements LabelInterface{
 	
 	@Override
 	public Response getLabelsOfNote(String token, String noteId) throws UserServiceException {
-		Response response = null;
 		String methodName="getLabelsOfNote()";
-		logger.info(methodName + "getLabelsOfNote API Called");	
+		logger.info(methodName + "getLabelsOfNote API Called");
+		
 		String userId= TokenUtil.decodetoken(token);
-		Optional<User> user = userrepository.findById(userId);
-		if(user == null) {
-			throw new UserServiceException(-6,"User dose not exist ");
-		}
-		Optional<Note> note = noterepository.findById(noteId);
-		if(!note.isPresent()) {
-			throw new UserServiceException(-6,"Note Dose Not exist ");
-		}
-		List<Label> label = note.get().getLabellist();
-		List<LabelDTO> listlabel = new ArrayList<>();
-		for(Label noteLabel: label) {
-			LabelDTO labeldto= mapper.map(noteLabel,LabelDTO.class);
-			listlabel.add(labeldto);
-		}
-		return  response;
+		System.out.println(userId);
+		Note note=noterepository.findByNoteId(noteId);
+		System.out.println(note);
+		List<Label> labellist=labelrepository.findByUserId(userId);
+		System.out.println(labellist);
+		note.setLabellist(labellist);
+		return responseMessage(environment.getProperty("status.getLabelsOfNote"),100);
 	}
 
 	/**
@@ -209,25 +204,16 @@ public class LabelService implements LabelInterface{
 	
 	@Override
 	public Response getNotesOfLabel(String token, String labelId) throws UserServiceException {
-		Response response = null;
 		String methodName="getNotesOfLabel()";
 		logger.info(methodName + "getNotesOfLabel API Called");	
-		String userId =TokenUtil.decodetoken(token);
-		Optional<User> user = userrepository.findById(userId);
-		if(!user.isPresent()) {
-			throw new UserServiceException(-6,"Invalid User");
-		}
-		Label label = labelrepository.findByLabelIdAndUserId(labelId, userId);
-		if(label == null) {
-			throw new UserServiceException(-6,"Invalid Label");
-		}
-		List<Note> notes = label.getNotes();
-		List<NoteDTO> noteList = new ArrayList<>();
-		for(Note note : notes) {
-			NoteDTO noteDto= mapper.map(note, NoteDTO.class);
-			noteList.add(noteDto);
-		}
-		return response;
+		String userId=TokenUtil.decodetoken(token);
+		System.out.println(userId);
+		Label label=labelrepository.findByLabelIdAndUserId(labelId, userId);
+		System.out.println(label);
+		List<Note> notelist=noterepository.findByUserId(userId);
+		System.out.println(notelist);
+		label.setNotelist(notelist);
+		return responseMessage(environment.getProperty("status.getNotesOfLabel"),100);
 	}
 	
 	/**
@@ -236,22 +222,20 @@ public class LabelService implements LabelInterface{
 	 * @throws UserServiceException
 	 */
 	@Override
-	public Response getAllLabelFromUser(String token) throws UserServiceException {
-		Response response=null;
+	public Response getAllLabelFromUser(String token,String email) throws UserServiceException {
 		String methodName="getAllLabelFromUser()";
 		logger.info(methodName + "getAllLabelFromUser API Called");	
+		
 		String userId = TokenUtil.decodetoken(token);
 		Optional<User> user = userrepository.findById(userId);
-		if(!user.isPresent()) {
+		User newuser=userrepository.findByEmail(email);
+		if(!newuser.isPresent()) {
 			throw new UserServiceException("Invalis input ");
 		}
-		List<Label> labels = labelrepository.findByUserId(userId);
-		List<Label> listLabel =  new ArrayList<>();
-		for(Label noteLabel:labels) {
-			Label labelDto = mapper.map(noteLabel, Label.class);
-			listLabel.add(labelDto);
-		}
-			return response;
+		List<Label> labellist = labelrepository.findByUserId(userId);
+	    newuser.setLabellist(labellist);
+	    userrepository.save(newuser);
+		return responseMessage(environment.getProperty("status.getAllLabelFromUser"),100);
 	}
 	
 	/**
@@ -288,5 +272,50 @@ public class LabelService implements LabelInterface{
 		Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
 		response.getStatusMessage();
 		return response;
+	}
+
+	
+	/**
+	 * Purpose : Implementation of Retrieve User Note and Label.
+	 */
+	@Override
+	public Response getUserNoteAndLabel(String token, String noteId, String labelId ,String email) throws UserServiceException {
+		String userId = TokenUtil.decodetoken(token);
+		User user1=userrepository.findByEmail(email);
+		List<Note> notelist =noterepository.findByUserId(userId);
+         if(notelist == null) 
+			throw new UserServiceException(101,"Invalid Note");      
+        List<Label> label=labelrepository.findByLabelId(labelId);
+		if(label == null) {
+			throw new UserServiceException(-6,"Invalid label");
+		}
+		Note note=noterepository.findByNoteId(noteId);
+		List<Label> labellist=labelrepository.findByLabelId(labelId);
+		user1.setNotelist(notelist);
+		note.setLabellist(labellist);
+		userrepository.save(user1);
+		noterepository.save(note);
+		return responseMessage(environment.getProperty("status.Note.addnote.addlabel"),100);
+	}
+
+	/**
+	 * Purpose :Add Note To User
+	 */
+	@Override
+	public Response addnotetoUser(String token, String noteId ,String email) throws UserServiceException {
+		String userId = TokenUtil.decodetoken(token);
+		Note note = noterepository.findByUserIdAndNoteId(userId, noteId);
+		System.out.println(note);
+		if(note == null) 
+			throw new UserServiceException(101,"Invalid Note");
+		
+        Optional<User> user = userrepository.findById(userId);
+		if(!user.isPresent())
+			throw new UserServiceException("user not found");
+		List<Note> notelist=noterepository.findByUserId(userId);
+		User newuser=userrepository.findByEmail(email);
+		newuser.setNotelist(notelist);
+		userrepository.save(newuser);
+		return responseMessage(environment.getProperty("status.Note.addnotetoUser"),100);
 	}
 }

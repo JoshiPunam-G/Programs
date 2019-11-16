@@ -8,7 +8,13 @@
  */
 
 package com.bridgelabz.fundoo.label.controller;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.mail.Multipart;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +27,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.exception.UserServiceException;
@@ -31,6 +39,7 @@ import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.label.service.LabelService;
 import com.bridgelabz.fundoo.notes.service.NoteService;
 import com.bridgelabz.fundoo.response.Response;
+import com.google.common.net.MediaType;
 
 @RequestMapping("/label")
 @RestController
@@ -113,7 +122,7 @@ public class LabelController {
 	 */
 	
 	@GetMapping("/getLabelsOfNote")
-	public ResponseEntity<Response> getLabelsOfNote(String token, String noteId) throws UserServiceException 
+	public ResponseEntity<Response> getLabelsOfNote(@RequestHeader String token, @RequestParam String noteId) throws UserServiceException 
 	{
 		String methodName="getLabelsOfNote()";
 		logger.info(methodName + "getLabelsOfNote API Called");	
@@ -130,7 +139,7 @@ public class LabelController {
 	 */
 	
 	@GetMapping("/getNotesOfLabel")
-	public ResponseEntity<Response> getNotesOfLabel(String token, String labelId) throws UserServiceException 
+	public ResponseEntity<Response> getNotesOfLabel(@RequestHeader String token, @RequestParam String labelId) throws UserServiceException 
 	{
 		String methodName="getNotesOfLabel()";
 		logger.info(methodName + "getNotesOfLabel API Called");	
@@ -146,13 +155,22 @@ public class LabelController {
 	 * @throws UserServiceException
 	 */
 	
-	@GetMapping("/getLabel")
-	public ResponseEntity<Response> getAllLabelFromUser(@RequestHeader String token) throws UserServiceException 
+	@GetMapping("/getAllLabelFromUser")
+	public ResponseEntity<Response> getAllLabelFromUser(@RequestHeader String token ,@RequestParam String email) throws UserServiceException 
 	{
 		String methodName="getAllLabelFromUser()";
 		logger.info(methodName + "getAllLabelFromUser API Called");	
-		Response response=labelservice.getAllLabelFromUser(token);
+		Response response=labelservice.getAllLabelFromUser(token,email);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	}
+	
+	@PutMapping("/addnotetoUser")
+	public ResponseEntity<Response> addnotetoUser(@RequestHeader String token, @RequestParam String noteId ,@RequestParam String email) throws UserServiceException
+	{
+		String methodName="getAllLabelFromUser()";
+		logger.info(methodName + "getAllLabelFromUser API Called");	
+	    Response response=labelservice.addnotetoUser(token, noteId, email);
+	    return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
 	/**
@@ -179,5 +197,38 @@ public class LabelController {
 		labelservice.deleteAllLabel();
 		return "All Label Deleted";
 	}
+	/**
+	 * Purpose :Retrieve User Note And Label
+	 * @param token
+	 * @param noteId
+	 * @param labelId
+	 * @param email
+	 * @return
+	 * @throws UserServiceException
+	 */
+	
+	@PutMapping("/getUserNoteAndLabel")
+	public ResponseEntity<Response> getUserNoteAndLabel(@RequestHeader String token, @RequestParam String noteId, @RequestParam  String labelId ,  @RequestParam  String email) throws UserServiceException 
+	{
+		String methodName="getUserNoteAndLabel()";
+		logger.info(methodName + "getUserNoteAndLabel API Called");	
+		Response response=labelservice.getUserNoteAndLabel(token, noteId, labelId, email);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	}
+	
+	
+
+	/*
+	 * @RequestMapping(value="/upload" ,method=RequestMethod.POST )
+	 * //@PostMapping("/upload" ) public ResponseEntity<Object>
+	 * uploadFile(@RequestParam("file")MultipartFile file )throws IOException {
+	 * System.out.println("In upload file"); File convertfile=new
+	 * File("/home/admin106/Documents" +file.getOriginalFilename());
+	 * convertfile.createNewFile(); FileOutputStream fout=new
+	 * FileOutputStream(convertfile); fout.write(file.getBytes()); fout.close();
+	 * return new ResponseEntity<>("File Uploaded Successfully " ,HttpStatus.OK);
+	 * 
+	 * }
+	 */
 
 }

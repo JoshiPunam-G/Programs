@@ -119,13 +119,12 @@ public class NoteService implements NoteInterface {
 				note.setStatusArchieve(true);
 				noterepository.save(note);
 				return responseMessage(environment.getProperty("status.note.archieve"),200);
-				 
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				 return responseMessage(environment.getProperty("status.note.unarchieve"),200);	
+				return responseMessage(environment.getProperty("status.note.unarchieve"),200);	
 			}
 		}
 	
@@ -290,6 +289,24 @@ public void DeleteAllNote()
 	String methodName="DeleteAllNote()";
 	logger.info(methodName + "DeleteAllNote Method Called");
 	 noterepository.deleteAll();
+}
+
+
+/**
+ * Purpose :Reminder set To note
+ */
+@Override
+public Response setReminder(String token, String noteId, String reminder) throws UserServiceException {
+	 String methodName="setReminder()";
+	logger.info(methodName + "setReminder API Called");	 
+	String tokenNote=TokenUtil.decodetoken(token);
+	Note note1=noterepository.findByNoteId(noteId);
+	System.out.println(note1);
+	if(note1==null)
+		 throw new UserServiceException(environment.getProperty("note.notpresent"));
+	note1.setReminder(reminder);
+	noterepository.save(note1);
+	return responseMessage(environment.getProperty("status.setReminder"), 200);
 }
 
 }

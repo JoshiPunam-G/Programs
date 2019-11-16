@@ -21,7 +21,7 @@ public class Label {
 	
 	private LocalDateTime now;
 	@DBRef(lazy=true)
-	private Note note;
+	private List<Note> notelist;
 	
 	public String getLabelId() {
 		return labelId;
@@ -42,18 +42,25 @@ public class Label {
 		this.labelCreateDate = localdate;
 	}
 	
-	public Note getNote() {
-		return note;
-	}
-	public void setNote(Note note) {
-		this.note = note;
-	}
+	
+	
 	
 	@Override
 	public String toString() {
 		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", labelCreateDate=" + labelCreateDate
-			 + ", userId=" + userId + ", note=" + note + ", localDateTime="
-				+ labelCreateDate + "]";
+				+ ", userId=" + userId + ", now=" + now + ", notelist=" + notelist + "]";
+	}
+	public LocalDateTime getNow() {
+		return now;
+	}
+	public void setNow(LocalDateTime now) {
+		this.now = now;
+	}
+	public List<Note> getNotelist() {
+		return notelist;
+	}
+	public void setNotelist(List<Note> notelist) {
+		this.notelist = notelist;
 	}
 	public String getUserId() {
 		return userId;

@@ -32,10 +32,7 @@ public class UserController {
 
 	@Autowired
 	public UserService userservice;
-//
-//	@Autowired
-//	private EmailService mailservice;
-//	
+	
 	/**
 	 * Purpose :Implementation for User Login
 	 * @throws Exception 
@@ -175,7 +172,7 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/deleteAll")
+	@DeleteMapping("/deleteAll")
 	public String deleteAll() {
 		userservice.deleteAll();
 		return "Record Deleted ";

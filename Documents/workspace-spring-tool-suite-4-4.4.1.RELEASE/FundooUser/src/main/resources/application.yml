@@ -1,0 +1,5 @@
+amazonProperties:
+  endpointUrl:" https://s3.us-east-2.amazonaws.com"
+  accessKey:"AKIA2DAGNNYSBDRMIP3A" 
+  secretKey:"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"
+  bucketName:"punam-bucket"

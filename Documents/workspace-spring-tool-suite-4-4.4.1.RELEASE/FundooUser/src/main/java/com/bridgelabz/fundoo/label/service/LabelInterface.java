@@ -21,5 +21,9 @@ public interface LabelInterface {
 	
 	public Response getNotesOfLabel(String token, String labelId) throws UserServiceException;
 	
-	public Response getAllLabelFromUser(String token) throws UserServiceException;
+	public Response getAllLabelFromUser(String token ,String email) throws UserServiceException;
+	
+	public Response getUserNoteAndLabel(String token , String noteId ,String labelId,String email) throws UserServiceException;
+	
+	public Response addnotetoUser(String token ,String noteId,String email)throws UserServiceException;
 }

@@ -1,4 +1,5 @@
 package com.bridgelabz.fundoo.notes.service;
+import java.time.LocalDateTime;
 import java.util.List;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.notes.dto.NoteDTO;
@@ -15,7 +16,7 @@ public interface NoteInterface {
 	 public Response deleteinTrash(String noteId, String token) throws UserServiceException;
 	 public Response retrieveNote(String token, String noteId);
 	 public Response deleteNote(String token, String noteId);
-	 
+	 public Response setReminder(String token,String noteId, String reminder) throws UserServiceException; 
 	 
 	
 }

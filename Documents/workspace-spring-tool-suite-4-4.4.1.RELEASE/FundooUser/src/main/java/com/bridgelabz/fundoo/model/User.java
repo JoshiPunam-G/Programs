@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.bridgelabz.fundoo.label.model.Label;
+import com.bridgelabz.fundoo.notes.model.Note;
 
 @Document
 public class User {
@@ -24,14 +25,20 @@ public class User {
 	private String password;
 	@NotBlank(message="email must not be empty")
 	private String email;
-	
-	private String note;
-  
-	public String getNote() {
-		return note;
+
+	private List<Note> notelist;
+	private List<Label> labellist;
+	public List<Label> getLabellist() {
+		return labellist;
 	}
-	public void setNote(String note) {
-		this.note = note;
+	public void setLabellist(List<Label> labellist) {
+		this.labellist = labellist;
+	}
+	public List<Note> getNotelist() {
+		return notelist;
+	}
+	public void setNotelist(List<Note> notelist) {
+		this.notelist = notelist;
 	}
 	//constructor 
 	public User(String id ,String username, String password, String email) {
@@ -75,13 +82,12 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", note="
-				+ note + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email +  "]";
 	}
 	public void setResetToken(Object object) {
 	}
-	public List<Label> getLabel() {
-		
-		return null;
-	}
+//	public List<Note> getNotes() {
+//		return null;
+//	}
+//	
 }

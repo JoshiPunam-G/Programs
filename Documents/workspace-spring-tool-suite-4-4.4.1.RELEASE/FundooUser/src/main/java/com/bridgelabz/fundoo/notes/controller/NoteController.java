@@ -5,6 +5,7 @@
  * @since   11-11-2019  
  */
 package com.bridgelabz.fundoo.notes.controller;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -154,6 +155,15 @@ public class NoteController {
 		 String methodName="deleteNote()";
 		logger.info(methodName + "deleteNote API Called");	 
 		 Response response=noteservice.deleteNote(token, noteId);
+		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	 }
+	 
+	 @PutMapping("/setReminder")
+	 public ResponseEntity<Response> setReminder(@RequestHeader String token, @RequestParam String noteId,@RequestParam String reminder) throws UserServiceException
+	 {
+		 String methodName="setReminder()";
+		logger.info(methodName + "setReminder API Called");	 
+		 Response response=noteservice.setReminder(token, noteId, reminder);
 		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	 }
 	 
