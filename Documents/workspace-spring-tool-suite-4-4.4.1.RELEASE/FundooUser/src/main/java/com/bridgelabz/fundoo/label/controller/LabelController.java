@@ -218,17 +218,34 @@ public class LabelController {
 	
 	
 
-	/*
-	 * @RequestMapping(value="/upload" ,method=RequestMethod.POST )
-	 * //@PostMapping("/upload" ) public ResponseEntity<Object>
-	 * uploadFile(@RequestParam("file")MultipartFile file )throws IOException {
-	 * System.out.println("In upload file"); File convertfile=new
-	 * File("/home/admin106/Documents" +file.getOriginalFilename());
-	 * convertfile.createNewFile(); FileOutputStream fout=new
-	 * FileOutputStream(convertfile); fout.write(file.getBytes()); fout.close();
-	 * return new ResponseEntity<>("File Uploaded Successfully " ,HttpStatus.OK);
-	 * 
-	 * }
-	 */
+      @PutMapping("/upload")
+	  public String uploadFile(@RequestParam("file")MultipartFile file )throws IOException 
+	{
+	  logger.info("Upload File");
+	  File convertfile=new File("/home/admin106/DemoUpload/" +file.getOriginalFilename());
+	  convertfile.createNewFile(); 
+	 try
+	 {
+		 FileOutputStream fout=new FileOutputStream(convertfile); 
+		 fout.write(file.getBytes());
+		// fout.close();
+	 }
+	 catch(Exception e)
+	 {
+		 e.printStackTrace();
+	 }
+	  return "File Uploaded ";
+	  
+	  }
+	
+    
+      @DeleteMapping("/delete")
+    public String deleteFile(@RequestParam("file")MultipartFile file )throws IOException 
+  	{
+  	  logger.info("Upload File");
+  	  File convertfile=new File("/home/admin106/DemoUpload/" +file.getOriginalFilename());
+  	  convertfile.delete();
+  	  return "file deleted";
+  	}
 
 }
