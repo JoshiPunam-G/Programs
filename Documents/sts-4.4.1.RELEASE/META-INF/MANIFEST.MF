@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: 1.8.0_131 (Oracle Corporation)
+
+Name: SpringToolSuite4
+SHA-256-Digest: WFsuxp/YER4RJ002NCq34IpArJTJPKCaz77qX1WvUKY=
+
+Name: icon.xpm
+SHA-256-Digest: 5GQYzYFSuYKbGITbelWvelrcgkUszdkmp0xlBrn25/8=
+
