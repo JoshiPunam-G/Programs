@@ -23,5 +23,9 @@ public interface UserRepository extends MongoRepository<User, String> {
 	public Optional<User> findById(String email);
 
 	public void save(Optional<User> user);
+//
+//	public User findOne(Long valueOf);
+//
+//	public void delete(String email);
 
 }

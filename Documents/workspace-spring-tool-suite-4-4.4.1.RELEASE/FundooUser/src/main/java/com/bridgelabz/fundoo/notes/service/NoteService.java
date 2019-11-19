@@ -5,17 +5,23 @@
  * @since   11-11-2019  
  */
 package com.bridgelabz.fundoo.notes.service;
+import java.nio.channels.FileLock;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.apigateway.model.Op;
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.UserServiceException;
@@ -26,6 +32,7 @@ import com.bridgelabz.fundoo.notes.repository.NoteRepository;
 import com.bridgelabz.fundoo.repository.UserRepository;
 import com.bridgelabz.fundoo.response.Response;
 import com.bridgelabz.fundoo.response.ResponseStatus;
+import com.google.common.io.Files;
 
 @Service
 @PropertySource("user.properties")
@@ -55,8 +62,7 @@ public class NoteService implements NoteInterface {
 
 	@Override
 	public Response createNote(NoteDTO notedto, String token) throws UserServiceException {
-		String methodName="createNote()";
-		logger.info(methodName + "createNote Method Called");
+		logger.info("createNote called");
 		
 		String tokenNote = TokenUtil.decodetoken(token);
 		if (notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty()) {
@@ -78,8 +84,7 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response update(NoteDTO notedto, String noteId) throws UserServiceException {
-		String methodName="update()";
-		logger.info(methodName + "update Method Called");
+		logger.info("update Method Called");
 		
 		Note note = noterepository.findByNoteId(noteId);
 		if(notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty())
@@ -104,8 +109,7 @@ public class NoteService implements NoteInterface {
 
 	@Override
 	public Response setArchieveUnarchieve(String noteId, String token) throws UserServiceException {
-		String methodName="setArchieveUnarchieve()";
-		logger.info(methodName + "setArchieveUnarchieve Method Called");
+		logger.info("setArchieveUnarchieve Method Called");
 		
 		String tokenNote=TokenUtil.decodetoken(token);
 		Note note=noterepository.findByNoteId(noteId,tokenNote);
@@ -137,8 +141,7 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response setPinUnpin(String noteId, String token) throws UserServiceException {
-		String methodName="setPinUnpin()";
-		logger.info(methodName + "setPinUnpin Method Called");
+		logger.info("setPinUnpin Method Called");
 		String tokenNote=TokenUtil.decodetoken(token);
 		Note note=noterepository.findByNoteId(noteId,tokenNote);
 		if(note==null)
@@ -168,8 +171,7 @@ public class NoteService implements NoteInterface {
 	 */
 	@Override
 	public Response setTrashUntrash(String noteId, String token) throws UserServiceException {
-		String methodName="setTrashUntrash()";
-		logger.info(methodName + "setTrashUntrash Method Called");
+		logger.info( "setTrashUntrash Method Called");
 		
 	   String tokenNote=TokenUtil.decodetoken(token);
 	   Note note=noterepository.findByNoteId(noteId,tokenNote);
@@ -199,8 +201,7 @@ public class NoteService implements NoteInterface {
  */
 	@Override
 	public Response deleteinTrash(String noteId, String token) {
-		String methodName="deleteinTrash()";
-		logger.info(methodName + "deleteinTrash Method Called");
+		logger.info("deleteinTrash Method Called");
 		
 		String tokenNote = TokenUtil.decodetoken(token);
 		Optional<User> user=repository.findById(tokenNote);
@@ -226,8 +227,8 @@ public class NoteService implements NoteInterface {
 
 @Override
 public Response retrieveNote(String token, String noteId) {
-	String methodName="retrieveNote()";
-	logger.info(methodName + "retrieveNote Method Called");
+	
+	logger.info("retrieveNote Method Called");
 	String tokenNote=TokenUtil.decodetoken(token);
 	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
 	String title=note.getTitle();
@@ -245,8 +246,7 @@ public Response retrieveNote(String token, String noteId) {
 
 @Override
 public Response deleteNote(String token, String noteId) {
-	String methodName="deleteNote()";
-	logger.info(methodName + "deleteNote Method Called");
+	logger.info("deleteNote Method Called");
 	String tokenNote=TokenUtil.decodetoken(token);
 	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
 	if(note.isTrash()==false)
@@ -278,9 +278,7 @@ public Response responseMessage(String statusmessage,int statuscode)
 */
 @Override
 public List<Note> getAllNote() {
-	
-	String methodName="getAllNote()";
-	logger.info(methodName + "getAllNote Method Called");
+	logger.info( "getAllNote Method Called");
 		return noterepository.findAll();
    }
 
@@ -297,8 +295,7 @@ public void DeleteAllNote()
  */
 @Override
 public Response setReminder(String token, String noteId, String reminder) throws UserServiceException {
-	 String methodName="setReminder()";
-	logger.info(methodName + "setReminder API Called");	 
+	logger.info("setReminder API Called");	 
 	String tokenNote=TokenUtil.decodetoken(token);
 	Note note1=noterepository.findByNoteId(noteId);
 	System.out.println(note1);
@@ -308,5 +305,30 @@ public Response setReminder(String token, String noteId, String reminder) throws
 	noterepository.save(note1);
 	return responseMessage(environment.getProperty("status.setReminder"), 200);
 }
+
+
+//public Response uploadImageToNote(String token,String noteId,MultipartFile imagefile) throws UserServiceException
+//{
+//	String tokenNote=TokenUtil.decodetoken(token);
+//	Optional<User> user=repository.findById(tokenNote);
+//	if(!user.isPresent())
+//		throw new UserServiceException(20,"user not present");
+//	
+//	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
+//	if(note==null)
+//	throw new UserServiceException(10,"note not present");
+//	
+//	UUID randomUuid=UUID.randomUUID();
+//	String uniqueId=randomUuid.toString();
+//	try
+//	{
+//		//Files.copy(imagefile.getInputStream(), StandardCopyOption.REPLACE_EXISTING);
+//		//Files.copy(imagefile.getInputStream(), StandardCopyOption.REPLACE_EXISTING);
+//	    // Files.copy(imagefile.getInputStream(), StandardCopyOption.REPLACE_EXISTING);
+//	}catch(Exception e)
+//	{
+//		e.printStackTrace();
+//	}
+//}
 
 }

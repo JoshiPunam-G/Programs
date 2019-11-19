@@ -1,11 +1,13 @@
 package com.bridgelabz.fundoo.label.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
-import com.bridgelabz.fundoo.label.model.Label;
-import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.response.Response;
 
 public interface LabelInterface {
@@ -26,4 +28,8 @@ public interface LabelInterface {
 	public Response getUserNoteAndLabel(String token , String noteId ,String labelId,String email) throws UserServiceException;
 	
 	public Response addnotetoUser(String token ,String noteId,String email)throws UserServiceException;
+	
+	public Response uploadFile(@RequestParam("file")MultipartFile file )throws IOException ;
+	
+	public Response  deleteFile(@RequestParam("file")MultipartFile file )throws IOException;
 }

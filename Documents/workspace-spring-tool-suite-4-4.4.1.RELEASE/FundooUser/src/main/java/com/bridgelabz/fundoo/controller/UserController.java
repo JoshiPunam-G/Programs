@@ -6,7 +6,13 @@
  */
 package com.bridgelabz.fundoo.controller;
 import java.util.List;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,16 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fundoo.exception.RecordNotFoundException;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.model.User;
+import com.bridgelabz.fundoo.repository.UserRepository;
 import com.bridgelabz.fundoo.response.Response;
 import com.bridgelabz.fundoo.service.UserService;
 import com.bridgelabz.fundoo.user.dto.PasswordDTO;
 import com.bridgelabz.fundoo.user.dto.RegisterDTO;
 import com.bridgelabz.fundoo.user.dto.UserDTO;
+
+@RequestMapping("/user")
 @RestController
 public class UserController {
 
 	@Autowired
 	public UserService userservice;
+	
+	public UserRepository repository;
 	
 	/**
 	 * Purpose :Implementation for User Login
@@ -178,6 +189,22 @@ public class UserController {
 		return "Record Deleted ";
 	}
 
-
+	/*
+	 * @Cacheable(value = "user", key = "#email")
+	 * 
+	 * @RequestMapping(value = "/{email}", method = RequestMethod.GET) public User
+	 * getUser(@PathVariable String email) { System.out.println("Retrive User");
+	 * return repository.findOne(Long.valueOf(email)); }
+	 * 
+	 * @CacheEvict(value = "user", allEntries=true)
+	 * 
+	 * @DeleteMapping("/{email}") public void deleteUserByID(@PathVariable String
+	 * email) { repository.delete(email); }
+	 * 
+	 * @CachePut(value = "user", key = "#user.username")
+	 * 
+	 * @PutMapping("/updateUser") public User updatePersonByUsername(@RequestBody
+	 * User user) { repository.save(user); return user; }
+	 */
 
 }

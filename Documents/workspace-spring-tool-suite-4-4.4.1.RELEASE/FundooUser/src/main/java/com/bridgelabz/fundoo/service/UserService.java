@@ -8,17 +8,24 @@ package com.bridgelabz.fundoo.service;
 
 import java.util.List;
 
+
 import java.util.Optional;
 
 import javax.mail.MessagingException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.NotFoundException;
 import com.bridgelabz.fundoo.exception.UserServiceException;
@@ -301,4 +308,7 @@ public class UserService implements UserInterface {
 
 		throw new UserServiceException();
 	}
+	
+	
+
 }

@@ -5,6 +5,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +34,7 @@ public class SecurityConfiguration {
 	  @Bean
 	    public Docket productApi() {
 	        return new Docket(DocumentationType.SWAGGER_2)
-	                .select().apis(RequestHandlerSelectors.basePackage("com.bridgelabz.demo"))
+	                .select().apis(RequestHandlerSelectors.basePackage("com.bridgelabz.fundoo"))
 	                .build();
 	    }
 	 
@@ -47,5 +51,20 @@ public class SecurityConfiguration {
 	  {
 		  return new Response(0, null);
 	  }
+	  
+	  
+	@Bean
+	JedisConnectionFactory jedisConnectionFactory() {
+		RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
+		redisStandaloneConfiguration.setPassword(RedisPassword.of("redis@123"));
+		return new JedisConnectionFactory(redisStandaloneConfiguration);
+	}
+
+	@Bean
+	public RedisTemplate redisTemplate() {
+		RedisTemplate template = new RedisTemplate<>();
+		template.setConnectionFactory(jedisConnectionFactory());
+		return template;
+	}
 
 }

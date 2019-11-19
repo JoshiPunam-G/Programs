@@ -40,6 +40,9 @@ public class RegisterDTO {
 		this.password = password;
 		this.email = email;
 	}
+	public RegisterDTO() {
+		// TODO Auto-generated constructor stub
+	}
 	@Override
 	public String toString() {
 		return "RegisterDTO [username=" + username + ", password=" + password + ", email=" + email + "]";

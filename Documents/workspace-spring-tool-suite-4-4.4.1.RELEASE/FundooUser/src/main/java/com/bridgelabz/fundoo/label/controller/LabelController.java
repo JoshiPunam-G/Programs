@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.lambda.model.Environment;
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
@@ -59,8 +60,7 @@ public class LabelController {
 	@PostMapping("/createlabel")
 	public ResponseEntity<Response> createLabel(@RequestBody LabelDTO labeldto,@RequestHeader String Token) throws UserServiceException
 	{
-		String methodName="createLabel()";
-		logger.info(methodName + "createLabel API Called");		
+		logger.info("createLabel API Called");		
 		Response response=labelservice.createLabel(labeldto, Token);
 	    return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -76,8 +76,7 @@ public class LabelController {
 	@PostMapping("/updatelabel")
 	public ResponseEntity<Response> updateLabel(@RequestBody LabelDTO labeldto,@RequestHeader String token,@RequestParam String labelId) throws UserServiceException
 	{
-		String methodName="updateLabel()";
-		logger.info(methodName + "updateLabel API Called");		
+		logger.info("updateLabel API Called");		
 		Response response=labelservice.updateLabel(labeldto, token, labelId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -91,8 +90,7 @@ public class LabelController {
 	 */
 	@DeleteMapping("/deletelabel")
 	public ResponseEntity<Response> deleteLabel(@RequestHeader String token,@RequestParam String labelId) throws UserServiceException {
-		String methodName="deleteLabel()";
-		logger.info(methodName + "deleteLabel API Called");	
+		logger.info("deleteLabel API Called");	
 		Response response=labelservice.deleteLabel(token, labelId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
@@ -215,37 +213,32 @@ public class LabelController {
 		Response response=labelservice.getUserNoteAndLabel(token, noteId, labelId, email);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
-	
-	
-
-      @PutMapping("/upload")
-	  public String uploadFile(@RequestParam("file")MultipartFile file )throws IOException 
-	{
-	  logger.info("Upload File");
-	  File convertfile=new File("/home/admin106/DemoUpload/" +file.getOriginalFilename());
-	  convertfile.createNewFile(); 
-	 try
-	 {
-		 FileOutputStream fout=new FileOutputStream(convertfile); 
-		 fout.write(file.getBytes());
-		// fout.close();
-	 }
-	 catch(Exception e)
-	 {
-		 e.printStackTrace();
-	 }
-	  return "File Uploaded ";
-	  
+	/**
+	 * Purpose :API For Upload File
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	  @PutMapping("/upload")
+	  public ResponseEntity<Response> uploadFile(@RequestParam("file")MultipartFile file )throws IOException 
+	  {
+	  logger.info("uploadFile called");
+	  Response response=labelservice.uploadFile(file);
+	  return new  ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	  }
 	
-    
+    /**
+     * Purpose:API For Delete File
+     * @param file
+     * @return
+     * @throws IOException
+     */
       @DeleteMapping("/delete")
-    public String deleteFile(@RequestParam("file")MultipartFile file )throws IOException 
+    public ResponseEntity<Response> deleteFile(@RequestParam("file")MultipartFile file )throws IOException 
   	{
-  	  logger.info("Upload File");
-  	  File convertfile=new File("/home/admin106/DemoUpload/" +file.getOriginalFilename());
-  	  convertfile.delete();
-  	  return "file deleted";
+  	  logger.info("deleteFile called");
+  	  Response response=labelservice.deleteFile(file);
+  	  return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
   	}
 
 }

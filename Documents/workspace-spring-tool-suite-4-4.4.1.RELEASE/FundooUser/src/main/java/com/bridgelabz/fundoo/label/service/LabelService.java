@@ -6,6 +6,9 @@
  */
 package com.bridgelabz.fundoo.label.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
@@ -153,18 +157,16 @@ public class LabelService implements LabelInterface{
 		String userId = TokenUtil.decodetoken(token);
 		Note note = noterepository.findByUserIdAndNoteId(userId, noteId);
 		System.out.println(note);
-		if(note == null) 
-			throw new UserServiceException(101,"Invalid Note");
-		Optional<User> user = userrepository.findById(userId);
 		
-		if(!user.isPresent())
-			throw new UserServiceException("user not found");
-		List<Label> label=labelrepository.findByLabelId(labelId);
+      	if(note == null) 
+			throw new UserServiceException(101,"Invalid Note");
+		Label label=labelrepository.findByLabelIdAndUserId(labelId, userId);
 		
 		if(label == null) {
 			throw new UserServiceException(-6,"Invalid label");
 		}
-		note.setLabellist(label);
+	    
+		note.getLabellist().add(label);
 	    note.setModified(LocalDateTime.now());
 		noterepository.save(note);
 		return responseMessage(environment.getProperty("status.label.addnote"),100);
@@ -317,5 +319,38 @@ public class LabelService implements LabelInterface{
 		newuser.setNotelist(notelist);
 		userrepository.save(newuser);
 		return responseMessage(environment.getProperty("status.Note.addnotetoUser"),100);
+	}
+	
+	/**
+	 * Purpose :Upload File
+	 */
+
+	@Override
+	public Response uploadFile(MultipartFile file) throws IOException {
+		logger.info("Upload File");
+		  File convertfile=new File("/home/admin106/DemoUpload/" +file.getOriginalFilename());
+		  convertfile.createNewFile(); 
+		 try
+		 {
+			 FileOutputStream fout=new FileOutputStream(convertfile); 
+			 fout.write(file.getBytes());
+			// fout.close();
+		 }
+		 catch(Exception e)
+		 {
+			 e.printStackTrace();
+		 }
+		 return responseMessage(environment.getProperty("status.uploadfile.success"), 200);
+	}
+
+	/**
+	 * Purpose : Delete File
+	 */
+	@Override
+	public Response deleteFile(MultipartFile file) throws IOException {
+		logger.info("Upload File");
+	  	File convertfile=new File("/home/admin106/DemoUpload/" +file.getOriginalFilename());
+	  	convertfile.delete();
+	  	return responseMessage(environment.getProperty("status.deletefile.success"), 100);
 	}
 }

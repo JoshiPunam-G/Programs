@@ -8,6 +8,7 @@
  */
 
 package com.bridgelabz.fundoo.model;
+import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -16,7 +17,7 @@ import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.notes.model.Note;
 
 @Document
-public class User {
+public class User implements Serializable  {
 	@Id
 	private String id;
 	@NotBlank(message = "username must not be empty")
@@ -25,7 +26,11 @@ public class User {
 	private String password;
 	@NotBlank(message="email must not be empty")
 	private String email;
+	
+	private boolean isUpload;
 
+	
+	
 	private List<Note> notelist;
 	private List<Label> labellist;
 	public List<Label> getLabellist() {
@@ -41,11 +46,12 @@ public class User {
 		this.notelist = notelist;
 	}
 	//constructor 
-	public User(String id ,String username, String password, String email) {
+	public User(String id ,String username, String password, String email,boolean isUpload) {
 	    this.id=id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.isUpload=isUpload;
 	}
 	public String getId() {
 		return id;
@@ -56,6 +62,9 @@ public class User {
 	}
 
 	public User() {
+	}
+	public User(String key, String value) {
+
 	}
 	//getter and setter method 
 	public String getUsername() {
@@ -80,12 +89,22 @@ public class User {
 	public boolean isPresent() {
 		return false;
 	}
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email +  "]";
+
+	public boolean isUpload() {
+		return isUpload;
+	}
+	public void setUpload(boolean isUpload) {
+		this.isUpload = isUpload;
 	}
 	public void setResetToken(Object object) {
 	}
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
+				+ ", isUpload=" + isUpload + "]";
+	}
+	
+	
 //	public List<Note> getNotes() {
 //		return null;
 //	}
