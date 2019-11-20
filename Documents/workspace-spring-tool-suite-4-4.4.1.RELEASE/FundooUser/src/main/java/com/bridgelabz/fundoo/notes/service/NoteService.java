@@ -259,18 +259,7 @@ public Response deleteNote(String token, String noteId) {
 	return responseMessage(environment.getProperty("status.deletenote.fail"), 200);
 }
 
-/**
- * Purpose : Implementation for sending response message
- * @param statusmessage
- * @param statuscode
- * @return
- */
-public Response responseMessage(String statusmessage,int statuscode)
-{
-	Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
-	response.getStatusMessage();
-	return response;
-}
+
 
 
 /**
@@ -304,6 +293,23 @@ public Response setReminder(String token, String noteId, String reminder) throws
 	note1.setReminder(reminder);
 	noterepository.save(note1);
 	return responseMessage(environment.getProperty("status.setReminder"), 200);
+}
+
+
+
+
+
+/**
+ * Purpose : Implementation for sending response message
+ * @param statusmessage
+ * @param statuscode
+ * @return
+ */
+public Response responseMessage(String statusmessage,int statuscode)
+{
+	Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
+	response.getStatusMessage();
+	return response;
 }
 
 

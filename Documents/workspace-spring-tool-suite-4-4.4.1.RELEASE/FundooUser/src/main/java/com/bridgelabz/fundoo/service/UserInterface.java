@@ -18,7 +18,7 @@ public interface UserInterface  {
 	public User create(@RequestBody User user);
 	public Response login(UserDTO userdto) throws Exception ;
 	public Response register(RegisterDTO userdto);
-	public User delete(String email) throws Exception;
+	public Response delete(String email) throws Exception;
 	public List<User> findAll();
 	public User getByUsername(String username);
 	public void deleteAll();

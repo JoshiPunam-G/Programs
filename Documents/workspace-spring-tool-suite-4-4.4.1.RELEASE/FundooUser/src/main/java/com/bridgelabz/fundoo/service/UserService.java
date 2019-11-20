@@ -14,6 +14,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
@@ -26,11 +27,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.NotFoundException;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.model.EmailModel;
 import com.bridgelabz.fundoo.model.User;
+import com.bridgelabz.fundoo.notes.service.NoteService;
 import com.bridgelabz.fundoo.repository.UserRepository;
 import com.bridgelabz.fundoo.response.Response;
 import com.bridgelabz.fundoo.response.ResponseStatus;
@@ -41,6 +44,8 @@ import com.bridgelabz.fundoo.user.dto.UserDTO;
 @Service
 @PropertySource("user.properties")
 public class UserService implements UserInterface {
+	
+	private Logger logger=GlobalResource.getLogger(NoteService.class);
 	@Autowired
 	private UserRepository repository;
 
@@ -73,24 +78,19 @@ public class UserService implements UserInterface {
     @Override
 	public Response login(@RequestBody UserDTO userdto)//throws NotFoundException 
     {
-    	Response response;
+    	logger.info("login");
 		User user = repository.findByEmail(userdto.getEmail());
 		System.out.println(user);
 		boolean flag=encoder.matches(userdto.getPassword(), user.getPassword());
 		if (flag) {
 			String tokengenerate=TokenUtil.createtoken(user.getId());
 			System.out.println(tokengenerate);
-			response=ResponseStatus.tokenstatusInformation(environment.getProperty("status.login.success"),
-		    		Integer.parseInt(environment.getProperty("status.success.code")),tokengenerate);	
-			response.setStatusMessage(environment.getProperty("status.login.success"));
+			return responseToken(environment.getProperty("status.login.success"), 100 ,tokengenerate);
 		}
 		else
 		{
-			response=ResponseStatus.statusInformation(environment.getProperty("status.login.incorrectpassword"),
-		    		Integer.parseInt(environment.getProperty("status.invalid.details")));	
-			response.setStatusMessage(environment.getProperty("status.login.incorrectpassword"));
+			return responseMessage(environment.getProperty("status.login.incorrectpassword"), 200);
 		}
-		return response;
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class UserService implements UserInterface {
 	 */
     @Override
     public Response register(@RequestBody RegisterDTO userdto) { //throws NotFoundException {
-		Response response;
-		Optional<User> user=repository.findById(userdto.getEmail());
+		logger.info("register");
+    	Optional<User> user=repository.findById(userdto.getEmail());
 		
 		if(user.isPresent())
 		{
@@ -114,10 +114,7 @@ public class UserService implements UserInterface {
 		    User user1=mapper.map(userdto, User.class);
 		    user1.setPassword(encoder.encode(user1.getPassword()));
 		    repository.save(user1);
-		    response=ResponseStatus.statusInformation(environment.getProperty("status.success.register"),
-		    		Integer.parseInt(environment.getProperty("status.success.code")));	
-			response.setStatusMessage(environment.getProperty("status.success.register"));
-			return response;
+			return responseMessage(environment.getProperty("status.success.register"), 300);
 		}
 	}
 
@@ -133,9 +130,8 @@ public class UserService implements UserInterface {
 
     @Override
 	public Response update(RegisterDTO registerdto) throws Exception {
-		
+		logger.info("update ");
     	User user=repository.findByEmail(registerdto.getEmail());
-    	Response response;
     	if(user==null)
     	{
     		throw new NotFoundException(environment.getProperty("Exception.message.notfound"));
@@ -149,17 +145,10 @@ public class UserService implements UserInterface {
     		user.setUsername(registerdto.getUsername());
     		repository.save(user);
     		System.out.println(registerdto);
-    		
-    		 response=ResponseStatus.statusInformation(environment.getProperty("status.success.update"),
- 		    		Integer.parseInt(environment.getProperty("status.success.code")));	
- 			response.setStatusMessage(environment.getProperty("status.success.updated"));
- 			return response;
-    		
+ 			return responseMessage(environment.getProperty("status.success.update"), 200);
     	}
 	}
 
-
-   
 
 	/**
 	 * Purpose : API Of Forgot Password
@@ -172,10 +161,10 @@ public class UserService implements UserInterface {
 	 */
     @Override
 	public Response forgetPassword(UserDTO userdto) throws Exception {
-    	
+    	logger.info("forgetPassword");
 		EmailModel emailmodel = new EmailModel();
 
-		User user = repository.findByEmail(userdto.getEmail()); // "chaudharipratibha26@gmail.com"
+		User user = repository.findByEmail(userdto.getEmail()); 
 		System.out.println("User :" + userdto.getEmail());
 		
 		if (user == null) {
@@ -186,13 +175,9 @@ public class UserService implements UserInterface {
 			emailmodel.setFrom("joshipunam207@gmail.com");
 			emailmodel.setSubject("Email for Reset password ");
 			try {
-				
 				emailmodel.setBody(emailservice.getLink("http://localhost:8080/resetpassword/", user.getId()));
 				emailservice.sendEmail(emailmodel);
-				 response=ResponseStatus.statusInformation(environment.getProperty("status.success.sendmail"),
-		 		    		Integer.parseInt(environment.getProperty("status.success.code")));	
-		 			response.setStatusMessage(environment.getProperty("status.success.sendmail"));
-		 			return response;
+		 		return responseMessage(environment.getProperty("status.success.sendmail"),200);
 				
 			} catch (UserServiceException e) {
 				e.printStackTrace();
@@ -211,19 +196,17 @@ public class UserService implements UserInterface {
 	 */
     @Override
 	public Response resetPassword(String token, PasswordDTO passdto) {
+    	logger.info("resetPassword");
     	Response response=null;
     	
-		String userid = tokenutil.decodetoken(token);
+    	String userid = TokenUtil.decodetoken(token);
 		Optional<User> user = repository.findById(userid);
 		System.out.println("in reset");
 		if (passdto.getNewpassword().equals(passdto.getConfirmpassword())) {
 			user.get().setPassword(encoder.encode(passdto.getNewpassword()));
 			repository.save(user.get());
 			System.out.println("reset password");
-			response=ResponseStatus.statusInformation(environment.getProperty("status.resetsuccess.password.message"),
- 		    		Integer.parseInt(environment.getProperty("status.success.code")));	
- 			response.setStatusMessage(environment.getProperty("status.resetsuccess.password.message"));
- 			return response;
+ 			return responseToken(environment.getProperty("status.resetsuccess.password.message"), 200, userid);
 		}
 		System.out.println("reset password Failure");
 		
@@ -240,14 +223,15 @@ public class UserService implements UserInterface {
 	 */
 
     @Override
-	public User delete(String email) throws Exception {
+	public Response delete(String email) throws Exception {
 		User user = repository.findByEmail(email);
 		if (user == null) {
 			throw new Exception("Email not found");
 		} else {
 			repository.delete(user);
 		}
-		return user;
+		return responseMessage(environment.getProperty("status.resetsuccess.password.message"), 100);
+		
 	}
     
 
@@ -272,7 +256,7 @@ public class UserService implements UserInterface {
    	 */
        @Override
    	public List<User> findAll() {
-       	System.out.println("get All");
+       logger.info("Retrieve All User");
    		return repository.findAll();
    	}
 
@@ -284,6 +268,7 @@ public class UserService implements UserInterface {
    	 */
        @Override
    	public User getByUsername(String username) {
+    	   logger.info("getByUsername");
    		return repository.findByUsername(username);
    	}
 
@@ -292,11 +277,9 @@ public class UserService implements UserInterface {
    	 */
        @Override
    	public void deleteAll() {
-       	
+       	logger.info("deleteAll");
    		repository.deleteAll();
    	}
-
-   	
 
 	/**
 	 * Purpose : throw exception
@@ -307,6 +290,27 @@ public class UserService implements UserInterface {
 	public User USerException() throws UserServiceException {
 
 		throw new UserServiceException();
+	}
+	
+	
+	/**
+	 * Purpose : Implementation for sending response message
+	 * @param statusmessage
+	 * @param statuscode
+	 * @return
+	 */
+	public Response responseMessage(String statusmessage,int statuscode)
+	{
+		Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
+		response.getStatusMessage();
+		return response;
+	}
+	
+	public Response responseToken(String statusmessage,int statuscode, String token)
+	{
+		Response response=ResponseStatus.tokenstatusInformation(statusmessage, statuscode, token);
+		response.getStatusMessage();
+		return response;
 	}
 	
 	

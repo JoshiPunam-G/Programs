@@ -17,4 +17,12 @@ public class ResponseStatus {
 		response.setToken(token);
 		return response;
 	}
+	
+	public static Response statusInfo(String statusmessage,int statuscode)
+	{
+		Response response=new Response();
+		response.setStatusMessage(statusmessage);
+		response.setStatuscode(statuscode);
+		return response;
+	}
 }
