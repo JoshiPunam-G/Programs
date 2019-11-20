@@ -57,7 +57,7 @@ public class UserController {
 	 * 
 	 * @throws Exceptions
 	 */
-	@CrossOrigin(origins = "http://localhost:8080")
+	
 	@GetMapping("/login")
 	public ResponseEntity<Response> login(@RequestBody UserDTO userdto) throws UserServiceException  {
 		logger.info("login");
@@ -139,12 +139,14 @@ public class UserController {
 	 * @param passdto
 	 * @return
 	 */
+	
 	@PutMapping("/resetPassword/{token}")
 	public ResponseEntity<Response> resetPassword(@PathVariable(name = "token") String token, @RequestBody PasswordDTO passdto) {
 		logger.info("resetPassword");
 		Response response=userservice.resetPassword(token, passdto);
 		return new ResponseEntity<>(response,HttpStatus.ACCEPTED);
 	}
+	
 	/**
 	 * Purpose : Implementation for Retrieve All User
 	 * 
@@ -152,7 +154,8 @@ public class UserController {
 	 * @return
 	 */
 
-	@RequestMapping(value="/get" ,method = RequestMethod.GET)
+	//@RequestMapping(value="/get" ,method = RequestMethod.GET)
+	@GetMapping("/get")
 	public User get(@RequestParam String username) throws RecordNotFoundException, UserServiceException 
 	{
 		logger.info("retrieve user");
@@ -204,13 +207,13 @@ public class UserController {
 		return "Record Deleted ";
 	}
 
-	
-	@Cacheable(value = "user", key = "#email")
-	@RequestMapping(value = "/{email}", method = RequestMethod.GET)
-	public User getUser(@PathVariable String email) {
-		System.out.println("Retrive User");
-		return repository.findByEmail(email);
-	}
+//	
+//	@Cacheable(value = "user", key = "#email")
+//	@RequestMapping(value = "/{email}", method = RequestMethod.GET)
+//	public User getUser(@PathVariable String email) {
+//		System.out.println("Retrive User");
+//		return repository.findByEmail(email);
+//	}
 
 	@CacheEvict(value = "user", allEntries = true)
 	@DeleteMapping("/{email}")

@@ -73,7 +73,7 @@ public class NoteService implements NoteInterface {
 		 note.setCreateDate(LocalDateTime.now());
 		 note.setModified(LocalDateTime.now());
 		 noterepository.save(note);
-		 return responseMessage(environment.getProperty("status.success.createnote"), 100);
+		 return statusInfo(environment.getProperty("status.success.createnote"), 100);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class NoteService implements NoteInterface {
 		note.setDescription(notedto.getDescription());
 		note.setModified(LocalDateTime.now());
 		noterepository.save(note);
-		return responseMessage(environment.getProperty("status.notes.updatedSuccessfull"),200);
+		return statusInfo(environment.getProperty("status.notes.updatedSuccessfull"),200);
 		
 	}
 
@@ -122,13 +122,13 @@ public class NoteService implements NoteInterface {
 			{
 				note.setStatusArchieve(true);
 				noterepository.save(note);
-				return responseMessage(environment.getProperty("status.note.archieve"),200);
+				return statusInfo(environment.getProperty("status.note.archieve"),200);
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				return responseMessage(environment.getProperty("status.note.unarchieve"),200);	
+				return statusInfo(environment.getProperty("status.note.unarchieve"),200);	
 			}
 		}
 	
@@ -153,13 +153,13 @@ public class NoteService implements NoteInterface {
 			{
 				note.setStatusPinUnpin(true);
 				noterepository.save(note);
-				return responseMessage(environment.getProperty("status.note.pin"),200);
+				return statusInfo(environment.getProperty("status.note.pin"),200);
 			}
 			else
 			{
 				note.setStatusArchieve(false);
 				noterepository.save(note);
-				return responseMessage(environment.getProperty("status.note.unpin"),200);
+				return statusInfo(environment.getProperty("status.note.unpin"),200);
 			}
 	}
 
@@ -184,13 +184,13 @@ public class NoteService implements NoteInterface {
 		{
 			note.setStatusTrashUntrash(true);
 			noterepository.save(note);
-			return responseMessage(environment.getProperty("note.trash"),200);
+			return statusInfo(environment.getProperty("note.trash"),200);
 		}
 		else
 		{
 			note.setStatusArchieve(false);
 			noterepository.save(note);
-			return responseMessage(environment.getProperty("note.untrash"),200);
+			return statusInfo(environment.getProperty("note.untrash"),200);
 		}
 	}
 
@@ -211,11 +211,11 @@ public class NoteService implements NoteInterface {
 		   note.setStatusTrashUntrash(false);
 		   repository.save(user.get());
 		   noterepository.delete(note);
-		   return responseMessage(environment.getProperty("status.success.deleteTrash"), 200);
+		   return statusInfo(environment.getProperty("status.success.deleteTrash"), 200);
 		}
 		else
 		{
-			return responseMessage(environment.getProperty("status.success.deleteTrash"), 200);
+			return statusInfo(environment.getProperty("status.success.deleteTrash"), 200);
 		}
 	}
 	
@@ -235,7 +235,7 @@ public Response retrieveNote(String token, String noteId) {
 	System.out.println(title);
 	String description=note.getDescription();
 	System.out.println(description);
-	return responseMessage(environment.getProperty("status.findnotebyid.success"), 100);
+	return statusInfo(environment.getProperty("status.findnotebyid.success"), 100);
 }
 
 /**
@@ -256,7 +256,7 @@ public Response deleteNote(String token, String noteId) {
 		noterepository.save(note);
 		return responseMessage(environment.getProperty("status.deletenotebyid.success"), 100);	
 	}
-	return responseMessage(environment.getProperty("status.deletenote.fail"), 200);
+	return statusInfo(environment.getProperty("status.deletenote.fail"), 200);
 }
 
 
@@ -292,7 +292,7 @@ public Response setReminder(String token, String noteId, String reminder) throws
 		 throw new UserServiceException(environment.getProperty("note.notpresent"));
 	note1.setReminder(reminder);
 	noterepository.save(note1);
-	return responseMessage(environment.getProperty("status.setReminder"), 200);
+	return statusInfo(environment.getProperty("status.setReminder"), 200);
 }
 
 
@@ -309,6 +309,21 @@ public Response responseMessage(String statusmessage,int statuscode)
 {
 	Response response=ResponseStatus.statusInformation(statusmessage, statuscode);
 	response.getStatusMessage();
+	return response;
+}
+
+public Response responseToken(String statusmessage,int statuscode, String token)
+{
+	Response response=ResponseStatus.tokenstatusInformation(statusmessage, statuscode, token);
+	response.getStatusMessage();
+	return response;
+}
+
+public static Response statusInfo(String statusmessage,int statuscode)
+{
+	Response response=new Response();
+	response.setStatusMessage(statusmessage);
+	response.setStatuscode(statuscode);
 	return response;
 }
 
