@@ -7,26 +7,16 @@
 package com.bridgelabz.fundoo.service;
 
 import java.util.List;
-
-
 import java.util.Optional;
-
 import javax.mail.MessagingException;
-
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.NotFoundException;
@@ -110,7 +100,6 @@ public class UserService implements UserInterface {
 		}
 		else
 		{		
-			
 		    User user1=mapper.map(userdto, User.class);
 		    user1.setPassword(encoder.encode(user1.getPassword()));
 		    repository.save(user1);
@@ -184,7 +173,6 @@ public class UserService implements UserInterface {
 			}
 		}
 		return response;
-	
 	}
 
 	/**
@@ -201,7 +189,7 @@ public class UserService implements UserInterface {
     	
     	String userid = TokenUtil.decodetoken(token);
 		Optional<User> user = repository.findById(userid);
-		System.out.println("in reset");
+		
 		if (passdto.getNewpassword().equals(passdto.getConfirmpassword())) {
 			user.get().setPassword(encoder.encode(passdto.getNewpassword()));
 			repository.save(user.get());

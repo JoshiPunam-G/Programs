@@ -1,7 +1,6 @@
 package com.bridgelabz.fundoo.label.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -20,6 +19,7 @@ public class Label {
 	private String userId;
 	
 	private LocalDateTime now;
+	
 	@DBRef(lazy=true)
 	private List<Note> notelist;
 	
@@ -43,13 +43,6 @@ public class Label {
 	}
 	
 	
-	
-	
-	@Override
-	public String toString() {
-		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", labelCreateDate=" + labelCreateDate
-				+ ", userId=" + userId + ", now=" + now + ", notelist=" + notelist + "]";
-	}
 	public LocalDateTime getNow() {
 		return now;
 	}
@@ -75,11 +68,15 @@ public class Label {
 		this.labelCreateDate = localDateTime;
 	}
 	public void setModified(LocalDateTime now) {
-		this.labelCreateDate=now;
-		
+		this.labelCreateDate=now;	
 	}
-	
 	public List<Note> getNotes() {
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", labelCreateDate=" + labelCreateDate
+				+ ", userId=" + userId + ", now=" + now + ", notelist=" + notelist + "]";
 	}
 }

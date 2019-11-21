@@ -8,14 +8,8 @@
  */
 
 package com.bridgelabz.fundoo.label.controller;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import javax.mail.Multipart;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,12 +21,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.amazonaws.services.lambda.model.Environment;
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.label.dto.LabelDTO;
@@ -40,7 +31,6 @@ import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.label.service.LabelService;
 import com.bridgelabz.fundoo.notes.service.NoteService;
 import com.bridgelabz.fundoo.response.Response;
-import com.google.common.net.MediaType;
 
 @RequestMapping("/label")
 @RestController
@@ -111,6 +101,25 @@ public class LabelController {
 		Response response=labelservice.addlabeltoNote(labelId, token, noteId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
+	
+	
+	/**
+	 * Purpose :add Label
+	 * @param labelId
+	 * @param token
+	 * @param noteId
+	 * @return
+	 * @throws UserServiceException
+	 */
+	@PutMapping("/addnotetoLabel")
+	public ResponseEntity<Response> addnotetoLabel(@RequestParam String labelId,@RequestHeader String token,@RequestParam String noteId) throws UserServiceException 
+	{
+		logger.info("addnotetoLabel API Called");	
+		Response response=labelservice.addnotetoLabel(labelId, token, noteId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	}
+	
+	
 	/**
 	 * Purpose :Retrieve Label of Note
 	 * @param token

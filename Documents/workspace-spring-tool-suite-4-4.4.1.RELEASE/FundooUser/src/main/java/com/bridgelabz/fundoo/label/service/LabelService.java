@@ -7,12 +7,13 @@
 package com.bridgelabz.fundoo.label.service;
 
 import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -29,7 +30,6 @@ import com.bridgelabz.fundoo.label.dto.LabelDTO;
 import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.label.repository.LabelRepository;
 import com.bridgelabz.fundoo.model.User;
-import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.notes.model.Note;
 import com.bridgelabz.fundoo.notes.repository.NoteRepository;
 import com.bridgelabz.fundoo.notes.service.NoteService;
@@ -173,7 +173,34 @@ public class LabelService implements LabelInterface{
 	}
 	
 	
-
+	/**
+	 * Purpose :API for Add  Note to  Label
+	 * @param labelId
+	 * @param token
+	 * @param noteId
+	 * @throws UserServiceException
+	 */
+	@Override
+	public Response addnotetoLabel(String labelId, String token, String noteId) throws UserServiceException {
+		logger.info("addnotetoLabel");
+		String userId=TokenUtil.decodetoken(token);
+		Label label=labelrepository.findByLabelIdAndUserId(labelId, userId);
+		System.out.println(label);
+		if(label==null)
+	     throw new UserServiceException(100,"Invalid Label");
+		Note note=noterepository.findByNoteId(noteId);
+		System.out.println(note);
+	    List<Note> notelist=noterepository.findByUserId(userId);
+		if(note==null) {
+			throw new UserServiceException(20,"Invalid Note");
+		}
+		label.setNotelist(notelist);
+		label.getNotelist().add(note);
+		label.setModified(LocalDateTime.now());
+		labelrepository.save(label);
+		return responseMessage(environment.getProperty("status.addnotetoLabel"), 300);
+	}
+	
 	
 	/**
 	 * Purpose :API For Retrieve Label of Note
@@ -188,10 +215,14 @@ public class LabelService implements LabelInterface{
 		logger.info(methodName + "getLabelsOfNote API Called");
 		
 		String userId= TokenUtil.decodetoken(token);
-		System.out.println(userId);
 		Note note=noterepository.findByNoteId(noteId);
-		System.out.println(note);
 		List<Label> labellist=labelrepository.findByUserId(userId);
+		/**Java 8 Feature */
+		labellist.forEach(System.out::println);
+		System.out.println(labellist.stream().count());
+		List<Note> notelist=noterepository.findByUserId(userId);
+		notelist.stream().filter((s)->s.getNoteId().equals(userId)).collect(Collectors.toList());
+		System.out.println(notelist);
 		System.out.println(labellist);
 		note.setLabellist(labellist);
 		return responseMessage(environment.getProperty("status.getLabelsOfNote"),100);
@@ -229,7 +260,6 @@ public class LabelService implements LabelInterface{
 		logger.info(methodName + "getAllLabelFromUser API Called");	
 		
 		String userId = TokenUtil.decodetoken(token);
-		Optional<User> user = userrepository.findById(userId);
 		User newuser=userrepository.findByEmail(email);
 		if(!newuser.isPresent()) {
 			throw new UserServiceException("Invalis input ");
@@ -334,7 +364,6 @@ public class LabelService implements LabelInterface{
 		 {
 			 FileOutputStream fout=new FileOutputStream(convertfile); 
 			 fout.write(file.getBytes());
-			// fout.close();
 		 }
 		 catch(Exception e)
 		 {
@@ -353,4 +382,6 @@ public class LabelService implements LabelInterface{
 	  	convertfile.delete();
 	  	return responseMessage(environment.getProperty("status.deletefile.success"), 100);
 	}
+
+	
 }

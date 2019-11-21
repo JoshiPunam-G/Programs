@@ -5,13 +5,10 @@
  * @since   11-11-2019  
  */
 package com.bridgelabz.fundoo.notes.service;
-import java.nio.channels.FileLock;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -19,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.amazonaws.services.apigateway.model.Op;
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.UserServiceException;
@@ -32,8 +26,6 @@ import com.bridgelabz.fundoo.notes.repository.NoteRepository;
 import com.bridgelabz.fundoo.repository.UserRepository;
 import com.bridgelabz.fundoo.response.Response;
 import com.bridgelabz.fundoo.response.ResponseStatus;
-import com.google.common.io.Files;
-
 @Service
 @PropertySource("user.properties")
 public class NoteService implements NoteInterface {
@@ -83,23 +75,20 @@ public class NoteService implements NoteInterface {
 	 * @throws UserServiceException
 	 */
 	@Override
-	public Response update(NoteDTO notedto, String noteId) throws UserServiceException {
+	public Response update(NoteDTO notedto,String token, String noteId) throws UserServiceException {
 		logger.info("update Method Called");
-		
+		String tokenNote=TokenUtil.decodetoken(token);
 		Note note = noterepository.findByNoteId(noteId);
 		if(notedto.getTitle().isEmpty() && notedto.getDescription().isEmpty())
 		{
-			throw new UserServiceException("Title and description are empty" );
+			throw new UserServiceException("Title and description are empty",tokenNote );
 		}
 		note.setTitle(notedto.getTitle());
 		note.setDescription(notedto.getDescription());
 		note.setModified(LocalDateTime.now());
 		noterepository.save(note);
-		return statusInfo(environment.getProperty("status.notes.updatedSuccessfull"),200);
-		
-	}
-
-	
+		return statusInfo(environment.getProperty("status.notes.updatedSuccessfull"),200);	
+	}	
 	/**
 	 * Purpose :API for ArchieveAndUnArchieve note
 	 * @param noteId
@@ -113,7 +102,6 @@ public class NoteService implements NoteInterface {
 		
 		String tokenNote=TokenUtil.decodetoken(token);
 		Note note=noterepository.findByNoteId(noteId,tokenNote);
-		System.out.println(note);
 		if(note==null)
 		{
 			throw new UserServiceException(environment.getProperty("status.note.notfound"));
@@ -162,7 +150,7 @@ public class NoteService implements NoteInterface {
 				return statusInfo(environment.getProperty("status.note.unpin"),200);
 			}
 	}
-
+	
 	/**
 	 * Purpose :API For TrashUntrash
 	 * @param noteID
@@ -175,7 +163,7 @@ public class NoteService implements NoteInterface {
 		
 	   String tokenNote=TokenUtil.decodetoken(token);
 	   Note note=noterepository.findByNoteId(noteId,tokenNote);
-	   System.out.println(note);
+	 
 	 if(note==null)
 	 {
 		 throw new UserServiceException(environment.getProperty("note.notpresent"));
@@ -219,6 +207,23 @@ public class NoteService implements NoteInterface {
 		}
 	}
 	
+	
+	/**
+	 * Purpose :API For Restore Trash Note
+	 * @param token
+	 */
+
+	@Override
+	public Response restoreTrashNotes(String token) throws UserServiceException {
+		logger.info("restore trash");
+		String userId=TokenUtil.decodetoken(token);
+		User user = repository.findById(userId)
+				.orElseThrow(() -> new UserServiceException("Sorry ! Note are not available"));
+		List<Note> userNote = user.getNotes().stream().filter(data -> (data.isTrash() == true))
+				.collect(Collectors.toList());
+		System.out.println(userNote);
+		return statusInfo(environment.getProperty("status.success.restoreTrash"), 200);
+	}	
 /**
  * Purpose : Retrieve Note By NoteId
  * @param token
@@ -227,7 +232,6 @@ public class NoteService implements NoteInterface {
 
 @Override
 public Response retrieveNote(String token, String noteId) {
-	
 	logger.info("retrieveNote Method Called");
 	String tokenNote=TokenUtil.decodetoken(token);
 	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
@@ -259,9 +263,6 @@ public Response deleteNote(String token, String noteId) {
 	return statusInfo(environment.getProperty("status.deletenote.fail"), 200);
 }
 
-
-
-
 /**
 * Purpose : Retrieve All Note
 */
@@ -270,6 +271,20 @@ public List<Note> getAllNote() {
 	logger.info( "getAllNote Method Called");
 		return noterepository.findAll();
    }
+
+/**
+ * Purpose :Retrieve Note By User Id.
+ */
+
+@Override
+public Response getNoteByUserId(String token ,String noteId) {
+	logger.info("getNoteByUserId");
+	String tokenNote=TokenUtil.decodetoken(token);
+    Note note=noterepository.findByNoteId(noteId, tokenNote);
+    noterepository.save(note);
+	return responseMessage(environment.getProperty("status.getNoteByUserId"), 200);
+}
+
 
 public void DeleteAllNote()
 {
@@ -283,22 +298,16 @@ public void DeleteAllNote()
  * Purpose :Reminder set To note
  */
 @Override
-public Response setReminder(String token, String noteId, String reminder) throws UserServiceException {
+public Response setReminder(String token, String noteId, LocalDateTime reminder) throws UserServiceException {
 	logger.info("setReminder API Called");	 
-	String tokenNote=TokenUtil.decodetoken(token);
 	Note note1=noterepository.findByNoteId(noteId);
 	System.out.println(note1);
 	if(note1==null)
 		 throw new UserServiceException(environment.getProperty("note.notpresent"));
-	note1.setReminder(reminder);
+	note1.setReminder(LocalDateTime.now());
 	noterepository.save(note1);
 	return statusInfo(environment.getProperty("status.setReminder"), 200);
 }
-
-
-
-
-
 /**
  * Purpose : Implementation for sending response message
  * @param statusmessage
@@ -328,28 +337,5 @@ public static Response statusInfo(String statusmessage,int statuscode)
 }
 
 
-//public Response uploadImageToNote(String token,String noteId,MultipartFile imagefile) throws UserServiceException
-//{
-//	String tokenNote=TokenUtil.decodetoken(token);
-//	Optional<User> user=repository.findById(tokenNote);
-//	if(!user.isPresent())
-//		throw new UserServiceException(20,"user not present");
-//	
-//	Note note=noterepository.findByUserIdAndNoteId(tokenNote, noteId);
-//	if(note==null)
-//	throw new UserServiceException(10,"note not present");
-//	
-//	UUID randomUuid=UUID.randomUUID();
-//	String uniqueId=randomUuid.toString();
-//	try
-//	{
-//		//Files.copy(imagefile.getInputStream(), StandardCopyOption.REPLACE_EXISTING);
-//		//Files.copy(imagefile.getInputStream(), StandardCopyOption.REPLACE_EXISTING);
-//	    // Files.copy(imagefile.getInputStream(), StandardCopyOption.REPLACE_EXISTING);
-//	}catch(Exception e)
-//	{
-//		e.printStackTrace();
-//	}
-//}
 
 }

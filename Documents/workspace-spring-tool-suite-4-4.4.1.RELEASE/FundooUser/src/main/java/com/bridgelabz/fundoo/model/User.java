@@ -8,7 +8,6 @@
  */
 
 package com.bridgelabz.fundoo.model;
-import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
@@ -17,7 +16,7 @@ import com.bridgelabz.fundoo.label.model.Label;
 import com.bridgelabz.fundoo.notes.model.Note;
 
 @Document
-public class User implements Serializable  {
+public class User  {
 	@Id
 	private String id;
 	@NotBlank(message = "username must not be empty")
@@ -26,11 +25,7 @@ public class User implements Serializable  {
 	private String password;
 	@NotBlank(message="email must not be empty")
 	private String email;
-	
 	private boolean isUpload;
-
-	
-	
 	private List<Note> notelist;
 	private List<Label> labellist;
 	public List<Label> getLabellist() {
@@ -104,9 +99,8 @@ public class User implements Serializable  {
 				+ ", isUpload=" + isUpload + "]";
 	}
 	
+	public List<Note> getNotes() {
+		return null;
+	}
 	
-//	public List<Note> getNotes() {
-//		return null;
-//	}
-//	
 }

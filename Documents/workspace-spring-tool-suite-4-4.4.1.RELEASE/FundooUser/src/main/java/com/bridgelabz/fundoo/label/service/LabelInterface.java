@@ -16,6 +16,8 @@ public interface LabelInterface {
 	Response deleteLabel(String token, String labelId) throws UserServiceException;
 
 	Response addlabeltoNote(String labelId, String token, String noteId) throws UserServiceException;
+	
+	Response addnotetoLabel(String labelId,String token ,String noteId)throws UserServiceException;
 
 	Response updateLabel(LabelDTO labeldto, String token,String labelId) throws UserServiceException;
 	

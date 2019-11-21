@@ -7,7 +7,6 @@
 package com.bridgelabz.fundoo.notes.controller;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.bridgelabz.fundoo.Utility.GlobalResource;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.notes.dto.NoteDTO;
@@ -58,11 +56,11 @@ public class NoteController {
 	 * @throws UserServiceException
 	 */
 	@PutMapping("/updatenote")
-	public ResponseEntity<Response> update(@RequestBody NoteDTO notedto,@RequestParam String noteId) throws UserServiceException
+	public ResponseEntity<Response> update(@RequestBody NoteDTO notedto,@RequestHeader String token ,@RequestParam String noteId) throws UserServiceException
 	{
 		String methodName="update()";
 		logger.info(methodName + "update API Called");
-		Response response=noteservice.update(notedto, noteId);
+		Response response=noteservice.update(notedto,token, noteId);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
@@ -114,6 +112,16 @@ public class NoteController {
 		Response response=noteservice.setTrashUntrash(noteId, token);
 		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
+	
+	@PostMapping("/restoreTrashNotes")
+	public ResponseEntity<Response> restoreTrashNotes(@RequestHeader String token) throws UserServiceException
+	{
+		logger.info("restoreTrashNotes");
+		Response response=noteservice.restoreTrashNotes(token);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+	}
+	
+	
 	/**
 	 * Purpose :API for DeleteTRash
 	 * @param noteId
@@ -159,7 +167,7 @@ public class NoteController {
 	 }
 	 
 	 @PutMapping("/setReminder")
-	 public ResponseEntity<Response> setReminder(@RequestHeader String token, @RequestParam String noteId,@RequestParam String reminder) throws UserServiceException
+	 public ResponseEntity<Response> setReminder(@RequestHeader String token, @RequestParam String noteId,@RequestParam LocalDateTime reminder) throws UserServiceException
 	 {
 		 String methodName="setReminder()";
 		logger.info(methodName + "setReminder API Called");	 
@@ -176,8 +184,20 @@ public class NoteController {
 	public List<Note> getAllNote() {
 		String methodName="getAllNote()";
 		logger.info(methodName + "getAllNote Method Called");
-		
 		return noteservice.getAllNote();
+	}
+	
+	/**
+	 * Purpose : API For Retrieve Note by Id
+	 * @param token
+	 * @return
+	 */
+	
+	@GetMapping("/getNoteByUserId")
+	public ResponseEntity<Response> getNoteByUserId(@RequestHeader String token,@RequestParam String noteId) {
+		logger.info("getNoteByUserId");
+		Response response=noteservice.getNoteByUserId(token,noteId);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	}
 	
 	/**

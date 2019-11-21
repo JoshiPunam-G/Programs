@@ -1,9 +1,7 @@
 package com.bridgelabz.fundoo.notes.model;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bridgelabz.fundoo.label.model.Label;
@@ -20,10 +18,12 @@ public class Note {
 	private  boolean statusPinUnpin;
 	private boolean statusTrashUntrash;
 	private String userId;
+	
+	
 	private LocalDateTime now;
-	private String reminder;
+	private LocalDateTime reminder;
     
-
+	private List<Label> labellist ;
 //	public LocalDateTime getReminder() {
 //		return reminder;
 //	}
@@ -33,10 +33,10 @@ public class Note {
 	public String getUserId() {
 		return userId;
 	}
-	public String getReminder() {
+	public LocalDateTime getReminder() {
 		return reminder;
 	}
-	public void setReminder(String reminder) {
+	public void setReminder(LocalDateTime reminder) {
 		this.reminder = reminder;
 	}
 	public void setUserId(String userId) {
@@ -104,7 +104,7 @@ public class Note {
 		return false;
 	}
 	//@DBRef(lazy=true)
-	private List<Label> labellist ;
+	
 	public List<Label> getLabellist() {
 		return labellist;
 	}
