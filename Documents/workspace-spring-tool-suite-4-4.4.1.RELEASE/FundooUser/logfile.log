@@ -3089,3 +3089,6 @@ java.lang.IllegalArgumentException: Entity must not be null!
 2019-11-21 18:25:49.207  INFO 19227 --- [main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 285 ms
 2019-11-21 18:25:49.244  WARN 19227 --- [main] o.s.web.servlet.PageNotFound             : No mapping for POST /register
 2019-11-21 18:32:33.150  WARN 10641 --- [http-nio-8080-exec-6] o.s.web.servlet.PageNotFound             : Request method 'PUT' not supported
+2019-11-21 19:25:58.901  INFO 10641 --- [RMI TCP Connection(4)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2019-11-21 19:25:59.054  INFO 10641 --- [RMI TCP Connection(4)-127.0.0.1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-21 19:25:59.519  INFO 10641 --- [RMI TCP Connection(4)-127.0.0.1] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:2, serverValue:84}] to localhost:27017 because the pool has been closed.
