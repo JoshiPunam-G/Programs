@@ -6,20 +6,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.bridgelabz.fundoo.response.Response;
-import com.google.common.base.Predicate;
-
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -37,6 +32,7 @@ public class SecurityConfiguration {
 	  { 
 		  return new BCryptPasswordEncoder(); 
 	  }
+	private MongoDbFactory mongoDbFactory;
 	  @Bean
 	  
 	 
@@ -75,12 +71,14 @@ public class SecurityConfiguration {
 		redisStandaloneConfiguration.setPassword(RedisPassword.of("redis@123"));
 		return new JedisConnectionFactory(redisStandaloneConfiguration);
 	}
-
-	@Bean
-	public RedisTemplate redisTemplate() {
-		RedisTemplate template = new RedisTemplate<>();
-		template.setConnectionFactory(jedisConnectionFactory());
-		return template;
-	}
+//
+//	@Bean
+//	public RedisTemplate redisTemplate() {
+//		RedisTemplate template = new RedisTemplate<>();
+//		template.setConnectionFactory(jedisConnectionFactory());
+//		return template;
+//	}
+//	
+	
 
 }

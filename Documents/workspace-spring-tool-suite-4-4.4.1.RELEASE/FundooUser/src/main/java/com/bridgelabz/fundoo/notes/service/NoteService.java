@@ -1,3 +1,5 @@
+
+ 
 /**
  * Purpose : Implementation of Service for note.
  * Author  : Punam Joshi 
@@ -21,6 +23,7 @@ import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.model.User;
 import com.bridgelabz.fundoo.notes.dto.NoteDTO;
+import com.bridgelabz.fundoo.notes.dto.ReminderDTO;
 import com.bridgelabz.fundoo.notes.model.Note;
 import com.bridgelabz.fundoo.notes.repository.NoteRepository;
 import com.bridgelabz.fundoo.repository.UserRepository;
@@ -270,6 +273,8 @@ public Response deleteNote(String token, String noteId) {
 public List<Note> getAllNote() {
 	logger.info( "getAllNote Method Called");
 		return noterepository.findAll();
+//		System.out.println(notes);
+//		return notes;
    }
 
 /**
@@ -298,13 +303,15 @@ public void DeleteAllNote()
  * Purpose :Reminder set To note
  */
 @Override
-public Response setReminder(String token, String noteId, LocalDateTime reminder) throws UserServiceException {
+public Response setReminder(String token, String noteId, ReminderDTO reminder) throws UserServiceException {
 	logger.info("setReminder API Called");	 
 	Note note1=noterepository.findByNoteId(noteId);
 	System.out.println(note1);
 	if(note1==null)
 		 throw new UserServiceException(environment.getProperty("note.notpresent"));
-	note1.setReminder(LocalDateTime.now());
+	//note1.setReminderlist(reminderDTO);
+   
+   // reminderDTO.setReminder(reminderlist);
 	noterepository.save(note1);
 	return statusInfo(environment.getProperty("status.setReminder"), 200);
 }

@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bridgelabz.fundoo.label.model.Label;
+import com.bridgelabz.fundoo.notes.dto.ReminderDTO;
 @Document
 public class Note {
 	@Id
@@ -21,8 +22,8 @@ public class Note {
 	
 	
 	private LocalDateTime now;
-	private LocalDateTime reminder;
-    
+	//private String reminder;
+    private List<ReminderDTO> reminderlist;
 	private List<Label> labellist ;
 //	public LocalDateTime getReminder() {
 //		return reminder;
@@ -30,19 +31,35 @@ public class Note {
 //	public void setReminder(LocalDateTime reminder) {
 //		this.reminder = reminder;
 //	}
-	public String getUserId() {
-		return userId;
-	}
-	public LocalDateTime getReminder() {
-		return reminder;
-	}
-	public void setReminder(LocalDateTime reminder) {
-		this.reminder = reminder;
-	}
+	
+
+	//	public String getReminder() {
+//		return reminder;
+//	}
+//	public void setReminder(String reminder) {
+//		this.reminder = reminder;
+//	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	
+	public Note(String noteId, String title, String description, LocalDateTime createDate, boolean statusArchieve,
+			boolean statusPinUnpin, boolean statusTrashUntrash, String userId) {
+		super();
+		this.noteId = noteId;
+		this.title = title;
+		this.description = description;
+		this.createDate = createDate;
+		this.statusArchieve = statusArchieve;
+		this.statusPinUnpin = statusPinUnpin;
+		this.statusTrashUntrash = statusTrashUntrash;
+		this.userId = userId;
+	}
+
+	public Note() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getNoteId() {
 		return noteId;
 	}
@@ -113,6 +130,14 @@ public class Note {
 	}
 	public boolean isPresent() {
 		return false;
+	}
+
+	public List<ReminderDTO> getReminderlist() {
+		return reminderlist;
+	}
+
+	public void setReminderlist(List<ReminderDTO> reminderlist) {
+		this.reminderlist = reminderlist;
 	}
 	
 }

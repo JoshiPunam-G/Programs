@@ -1,52 +1,27 @@
 package com.bridgelabz.user.testcases;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.junit.Before;
+import static org.mockito.Mockito.when;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.Any;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import com.amazonaws.services.lambda.model.Environment;
+import com.bridgelabz.fundoo.exception.UserServiceException;
+import com.bridgelabz.fundoo.model.EmailModel;
 import com.bridgelabz.fundoo.model.User;
 import com.bridgelabz.fundoo.repository.UserRepository;
 import com.bridgelabz.fundoo.response.Response;
 import com.bridgelabz.fundoo.service.UserService;
 import com.bridgelabz.fundoo.user.dto.RegisterDTO;
 import com.bridgelabz.fundoo.user.dto.UserDTO;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes= { TestContext.class,WebApplicationContext.class})
@@ -71,80 +46,100 @@ public class UserServiceJunit {
 	@MockBean
 	private Environment environment;
 	
-	@Autowired
-	private WebApplicationContext webApplicationContext;
+//	@Autowired
+//	private WebApplicationContext webApplicationContext;
 
-	private MockMvc mockMvc;
-
-	@Before
-	public void setup() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-	}
-	
-	
-//	
-//	User user=new User("100","punam" ,"punam@123" ,"punamsj20@gmail.com" ,true);
-//	/**
-//	 * Purpose :Test Case For Registration
-//	 */
-//	@Test
-//	public void registerTest() {
-//        
-//		
-//		RegisterDTO registrationdto =new RegisterDTO();
-//      
-//		registrationdto.setEmail("punamsj20@gmail.com");
-//		registrationdto.setUsername("punam");
-//		registrationdto.setPassword("punam@123");
-//    	user.setId("100");
+//	@MockBean
+//	private MockMvc mockMvc;
 //
-//		System.out.println(user);
-//		System.out.println(registrationdto.getEmail());
-//		System.out.println(user.getEmail());
-//		assertEquals(registrationdto.getEmail(), user.getEmail());
-//	}
-//	 
-//	/**
-//	 * Purpose : Test case for Login
-//	 */
-//	
-//	@Test
-//   public void loginTest()
-//   {
-//        UserDTO userdto=new UserDTO();
-//        userdto.setEmail("punamsj20@gmail.com");
-//        userdto.setPassword("punam@123");
-//        System.out.println(userdto.getEmail());
-//        System.out.println(user.getEmail());
-//        assertEquals(userdto.getEmail(),user.getEmail());
-//        System.out.println(userdto.getPassword());
-//        System.out.println(user.getPassword());
-//        assertEquals(userdto.getPassword(),user.getPassword());
-//   }
-//	/**
-//	 * Purpose :Test cases for Update
-//	 */
-//	
-//	@Test
-//	public void update()
-//	{
-//	   User user=new User();
-//	   user.setPassword("123");
-//	   UserDTO userdto=new UserDTO();
-//	   userdto.setPassword("123");
-//	   assertEquals(userdto.getPassword(),user.getPassword());
+//	@Before
+//	public void setup() {
+//		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 //	}
 //	
-//	
+	
+	
+	User user=new User("100","punam" ,"punam@123" ,"punamsj20@gmail.com" ,true);
+	/**
+	 * Purpose :Test Case For Registration
+	 */
+	@Test
+	public void registerTest() {
+		RegisterDTO registrationdto =new RegisterDTO();
+		registrationdto.setEmail("punamsj20@gmail.com");
+		registrationdto.setUsername("punam");
+		registrationdto.setPassword("punam@123");
+		Optional<User> existuser=Optional.of(user);
+		when(userrepository.findByEmail(user.getEmail())).thenReturn(user);
+		when(mapper.map(registrationdto, User.class)).thenReturn(user);
+		when(userrepository.save(user)).thenReturn(user);
+		assertEquals(registrationdto.getEmail(), existuser.get().getEmail());
+	}
+	 
+	
+	/**
+	 * Purpose : Test case for Login
+	 */
 	
 	@Test
-	public void testEmployee() throws Exception {
-		mockMvc.perform(post("/register")).andExpect(status().isOk())
-				.andExpect(content().contentType("application/json;charset=UTF-8"))
-				.andExpect(jsonPath("$.email").value("punamsj20@gmail.com")).andExpect(jsonPath("$.username").value("punam"))
-				.andExpect(jsonPath("$.password").value("1234"));
-
+   public void loginTest()
+   {
+        UserDTO userdto=new UserDTO();
+        userdto.setEmail("punamsj20@gmail.com");
+        userdto.setPassword("punam@123");
+    	Optional<User> existuser=Optional.of(user);
+    	when(userrepository.findByEmail(user.getEmail())).thenReturn(user);
+    	when(encoder.matches(userdto.getPassword(), user.getPassword())).thenReturn(true);
+    	assertEquals(userdto.getEmail(), existuser.get().getEmail());  
+   }
+	/**
+	 * Purpose :Test cases for Update
+	 * @throws Exception 
+	 */
+	
+	@Test
+	public void updateTest() throws Exception
+	{
+		RegisterDTO registrationdto =new RegisterDTO();
+	//   when(userservice.update(registrationdto)).thenReturn(response);
+		registrationdto.setPassword("1234");
+		registrationdto.setEmail("punamsj20@gmail.com");
+		registrationdto.setUsername("punam");
+	    Optional<User> existuser=Optional.of(user);
+	    when(userrepository.findByEmail(user.getEmail())).thenReturn(user);
+	    when(userrepository.save(user)).thenReturn(user);
+	    assertEquals(registrationdto.getEmail(),existuser.get().getEmail() );
 	}
-
+	
+	/**
+	 * Purpose :Test Case For Forgot Password
+	 * @throws Exception
+	 */
+	
+	@Test
+	public void forgetpasswordTest() throws Exception
+	{
+		UserDTO userdto=new UserDTO();
+		EmailModel emailmodel = new EmailModel();
+		emailmodel.setTo(userdto.getEmail());
+		emailmodel.setFrom("joshipunam207@gmail.com");
+		emailmodel.setSubject("Email for Reset password ");
+		when(userrepository.findByEmail(user.getEmail())).thenReturn(user);
+		when(userrepository.save(user)).thenReturn(user);
+		assertEquals(userdto.getEmail(),emailmodel.getTo() );
 	}
+	
+
+//	@Test
+//	public void resetpasswordTest()
+//	{
+//		PasswordDTO passdto=new PasswordDTO();
+//		passdto.setNewpassword("1234");
+//		passdto.setConfirmpassword("1234");
+//		when(passdto.getNewpassword().equals(passdto.getConfirmpassword())).thenReturn(true);
+//		when(encoder.matches(passdto.getNewpassword(), user.getPassword())).thenReturn(true);
+//		when(userrepository.save(user)).thenReturn(user);
+//		assertEquals(passdto.getNewpassword(), user.getPassword());
+//	}
+}
 

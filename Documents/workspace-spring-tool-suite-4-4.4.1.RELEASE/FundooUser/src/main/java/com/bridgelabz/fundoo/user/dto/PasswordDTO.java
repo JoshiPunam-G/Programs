@@ -20,6 +20,9 @@ public class PasswordDTO {
 		this.newpassword = newpassword;
 		this.confirmpassword = confirmpassword;
 	}
+	public PasswordDTO() {
+		// TODO Auto-generated constructor stub
+	}
 	@Override
 	public String toString() {
 		return "PasswordDTO [newpassword=" + newpassword + ", confirmpassword=" + confirmpassword + "]";

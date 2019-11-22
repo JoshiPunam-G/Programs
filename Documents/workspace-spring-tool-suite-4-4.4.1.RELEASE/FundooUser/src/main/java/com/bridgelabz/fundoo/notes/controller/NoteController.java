@@ -5,7 +5,6 @@
  * @since   11-11-2019  
  */
 package com.bridgelabz.fundoo.notes.controller;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fundoo.Utility.GlobalResource;
+import com.bridgelabz.fundoo.Utility.TokenUtil;
 import com.bridgelabz.fundoo.exception.UserServiceException;
 import com.bridgelabz.fundoo.notes.dto.NoteDTO;
 import com.bridgelabz.fundoo.notes.model.Note;
@@ -40,12 +40,21 @@ public class NoteController {
 	 * @return
 	 * @throws UserServiceException
 	 */
+//	@PostMapping("/createnote")
+//	public  ResponseEntity<Response> createNote(@RequestBody NoteDTO notedto, @RequestHeader String token) throws UserServiceException {
+//		String methodName="createNote()";
+//		logger.info(methodName + "createNote API Called");		
+//		String id =TokenUtil.decodetoken(token);
+//		Response response=noteservice.createNote(notedto, id);
+//		return new ResponseEntity<Response>(response,HttpStatus.OK);
+//	}
 	@PostMapping("/createnote")
-	public  ResponseEntity<Response> createNote(@RequestBody NoteDTO notedto, @RequestHeader String token) throws UserServiceException {
-		String methodName="createNote()";
-		logger.info(methodName + "createNote API Called");		
+	public ResponseEntity<Response> createNote(@RequestBody NoteDTO notedto,@RequestHeader String token) throws UserServiceException{
+		logger.info("cretaeNote");
+		//String id =TokenUtil.decodetoken(token);
 		Response response=noteservice.createNote(notedto, token);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+		
 	}
 	/**
 	 * Purpose :API for Update Note
@@ -165,15 +174,15 @@ public class NoteController {
 		 Response response=noteservice.deleteNote(token, noteId);
 		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
 	 }
-	 
-	 @PutMapping("/setReminder")
-	 public ResponseEntity<Response> setReminder(@RequestHeader String token, @RequestParam String noteId,@RequestParam LocalDateTime reminder) throws UserServiceException
-	 {
-		 String methodName="setReminder()";
-		logger.info(methodName + "setReminder API Called");	 
-		 Response response=noteservice.setReminder(token, noteId, reminder);
-		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
-	 }
+//	 
+//	 @PutMapping("/setReminder")
+//	 public ResponseEntity<Response> setReminder(@RequestHeader String token, @RequestParam String noteId,@RequestParam String reminder) throws UserServiceException
+//	 {
+//		 String methodName="setReminder()";
+//		logger.info(methodName + "setReminder API Called");	 
+//		 Response response=noteservice.setReminder(token, noteId, reminder);
+//		 return new ResponseEntity<Response>(response,HttpStatus.ACCEPTED);
+//	 }
 	 
 	/**
 	 * Purpose: API For Retrieve All Note
