@@ -13,12 +13,12 @@
 	<artifactId>FundooUser</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>FundooUser</name>
+	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -30,7 +30,7 @@
     <artifactId>java-jwt</artifactId>
     <version>3.8.3</version>
 </dependency>
-
+   
 <dependency>
    <groupId>com.amazonaws</groupId>
    <artifactId>aws-java-sdk</artifactId>
@@ -69,8 +69,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-validation</artifactId>
 </dependency>  
-
-		<dependency>
+<dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt</artifactId>
     <version>0.9.1</version>
@@ -144,7 +143,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 <groupId>io.springfox</groupId>
 <artifactId>springfox-swagger-ui</artifactId>
 <version>2.6.1</version>
@@ -155,14 +154,17 @@
 <artifactId>springfox-swagger2</artifactId>
 <version>2.6.1</version>
 <scope>compile</scope>
-</dependency>
+</dependency> -->
 	</dependencies>
 
 	<build>
 		<plugins>
+			
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				
+				
 				<!--  <configuration>
 				 <includes>
 				 <include>com/bridgelabz/fundoo/notes/controller/NoteController.java</include>
@@ -171,6 +173,11 @@
 				 </includes>
 				 </configuration> -->
 			</plugin>
+			<plugin>
+			   <artifactId>maven-war-plugin</artifactId>
+				
+			</plugin>
+			
 		</plugins>
 	</build>
 

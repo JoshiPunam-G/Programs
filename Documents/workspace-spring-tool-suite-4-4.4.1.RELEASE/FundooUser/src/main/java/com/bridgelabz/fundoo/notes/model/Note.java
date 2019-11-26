@@ -13,14 +13,10 @@ public class Note {
 	private String title;
 	private String description;
 	private  LocalDateTime createDate;
-	
-	
 	private boolean statusArchieve;
 	private  boolean statusPinUnpin;
 	private boolean statusTrashUntrash;
 	private String userId;
-	
-	
 	private LocalDateTime now;
 	//private String reminder;
     private List<ReminderDTO> reminderlist;
