@@ -147,3 +147,5 @@
 2019-11-26 14:24:35.602  INFO 19053 --- [main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
 2019-11-26 14:24:35.603  INFO 19053 --- [main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
 2019-11-26 14:24:35.842  INFO 19053 --- [main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 239 ms
+2019-11-26 19:20:54.630  INFO 18908 --- [RMI TCP Connection(4)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2019-11-26 19:20:54.649  INFO 18908 --- [RMI TCP Connection(4)-127.0.0.1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
