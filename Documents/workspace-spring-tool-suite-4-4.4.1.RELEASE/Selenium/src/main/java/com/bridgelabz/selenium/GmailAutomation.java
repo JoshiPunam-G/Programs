@@ -1,5 +1,12 @@
 package com.bridgelabz.selenium;
 
+import java.awt.AWTException;
+
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -10,6 +17,32 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class GmailAutomation {
+	
+	
+	public static void uploadFileWithRobot ()
+	{
+		StringSelection str=new StringSelection("/home/admin106/Documents/ReadExcel.xlsx");
+		Clipboard clipboard=Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(str, null);
+		Robot robot=null;
+		try {
+		 robot=new Robot();
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+		
+		robot.delay(250);
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.delay(150);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+		//return filepath;
+	}
 
 	public static void main(String[] args) throws InterruptedException {
 		 
@@ -40,12 +73,23 @@ public class GmailAutomation {
 		
 		/**Sent Mail  */
 		driver.findElement(By.xpath("//textarea[@name='to']")).sendKeys("punamsj20@gmail.com");
-		driver.findElement(By.xpath("//input[@name='subjectbox']")).sendKeys("Automated Mail");
+		driver.findElement(By.xpath("//input[@name='subjectbox']")).sendKeys("Automated Record File");
+		
+		/**Attach File */
+		driver.findElement(By.xpath("//div[@class='Am Al editable LW-avf tS-tW']")).sendKeys("Hello Punam ..! This is Automated Email ");
+		driver.findElement(By.xpath("//div[@class='a1 aaA aMZ']")).click();
+		GmailAutomation.uploadFileWithRobot();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		/**Send Mail */
 		driver.findElement(By.xpath("//div[@class='T-I J-J5-Ji aoO v7 T-I-atl L3']")).click();
 		
-//		/**Attach File */
-//		driver.findElement(By.xpath("//div[@class='a1 aaA aMZ']")).click();
-//		
+		/**Click On Google Account */
+		driver.findElement(By.xpath("//span[@class='gb_Ia gbii']")).click();
+		
+		/**Sign Out Account */
+		driver.findElement(By.xpath("//a[@id='gb_71']")).click();
+		
+		
        
 	}
 

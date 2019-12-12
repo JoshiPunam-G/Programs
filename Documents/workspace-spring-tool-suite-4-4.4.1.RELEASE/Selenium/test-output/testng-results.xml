@@ -2,12 +2,12 @@
 <testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="28111" started-at="2019-12-12T10:21:38 IST" finished-at="2019-12-12T10:22:07 IST">
+  <suite name="Default suite" duration-ms="4998" started-at="2019-12-12T17:02:49 IST" finished-at="2019-12-12T17:02:54 IST">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="28111" started-at="2019-12-12T10:21:38 IST" finished-at="2019-12-12T10:22:07 IST">
+    <test name="Default test" duration-ms="4998" started-at="2019-12-12T17:02:49 IST" finished-at="2019-12-12T17:02:54 IST">
       <class name="com.bridgelabz.selenium.LinkedInLogin">
-        <test-method status="PASS" signature="loginLinkedIn()[pri:0, instance:com.bridgelabz.selenium.LinkedInLogin@49e202ad]" name="loginLinkedIn" duration-ms="28072" started-at="2019-12-12T10:21:38 IST" finished-at="2019-12-12T10:22:07 IST">
+        <test-method status="PASS" signature="loginLinkedIn()[pri:0, instance:com.bridgelabz.selenium.LinkedInLogin@5a4aa2f2]" name="loginLinkedIn" duration-ms="4963" started-at="2019-12-12T17:02:49 IST" finished-at="2019-12-12T17:02:54 IST">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- loginLinkedIn -->
