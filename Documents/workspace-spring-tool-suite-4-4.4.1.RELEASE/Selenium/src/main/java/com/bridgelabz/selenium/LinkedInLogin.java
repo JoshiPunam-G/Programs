@@ -15,11 +15,10 @@ public class LinkedInLogin {
  		 driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
  		 driver.manage().window().maximize();
  		 driver.navigate().to("https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin");
- 		 driver.findElement(By.id("username")).sendKeys("joshipunam207@gmail.com");
+ 		 driver.findElement(By.id("username")).sendKeys("joshipunam207@gmail.coml");
  		 driver.findElement(By.xpath("//input[@name='session_password']")).sendKeys("7218374140");
  		 driver.findElement(By.xpath("//button[@class='btn__primary--large from__button--floating']")).click();
- 		// driver.findElement(By.xpath("//button[@name='submit']")).click();
-       //  Thread.sleep(10000);
+ 		
      }
 		
     
